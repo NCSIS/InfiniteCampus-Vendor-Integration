@@ -4,7 +4,7 @@
 	Description:
 	Point-of-Sale Linker file for school nutrition point-of-sale system
 	
-	Author: Ruthorford County schools
+	Author: Rutherford County Schools
 	
 	Revision History:
 	07/12/2024		Initial creation of this template
@@ -103,5 +103,8 @@ JOIN
 	Household hh ON hh.householdID = hm.householdID
 WHERE 
 	s.activeYear = 1
--- Change the below to 1 for active students, have set to 0 to pull non-active for summer. 
---   AND s.activeToday = 0
+-- Added the below to prevent null student ids from showing up in the export. Meals Plus import can fail import with missing student numbers. (RCS/JMT 7/25/2024)
+	AND s.studentNumber IS NOT NULL
+	AND s.studentNumber <> ''
+-- Change the below to 1 for active students, have set to 0 to pull non-active for summer. Leave below commented out to allow all activeYear to export, use below if needed to filter out inactives during the school year. 
+-- AND s.activeToday = 0
