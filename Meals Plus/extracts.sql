@@ -16,6 +16,8 @@
 --Rutherford County Schools, NC, Infinite Campus MealsPlus query, JMT 7/2024
 --Followed and recreated previous NC Meals Plus Linker Header from State Report / PowerSchool
 --Unused fields as shown in the Meals Plus Import are just the header recreated with no data
+--JMT 7/31/2024 Removed NOLOCK per Infinite Campus KB https://kb.infinitecampus.com/help/nolock-faq
+--Also added AND sch.name <> 'NCDPI' to filter out NCDPI users from export, cuts down on errors in Meals Plus import log. 
 
 WITH ContactsOrdered AS (
 	SELECT 
@@ -33,7 +35,7 @@ WITH ContactsOrdered AS (
 		c.zip,
 		ROW_NUMBER() OVER (PARTITION BY c.personID ORDER BY c.contactPersonID) AS rowNumber
 	FROM 
-		v_CensusContactSummary c WITH (NOLOCK)
+		v_CensusContactSummary c
 	WHERE 
 		c.guardian = 1
 )
@@ -106,5 +108,7 @@ WHERE
 -- Added the below to prevent null student ids from showing up in the export. Meals Plus import can fail import with missing student numbers. (RCS/JMT 7/25/2024)
 	AND s.studentNumber IS NOT NULL
 	AND s.studentNumber <> ''
+        AND sch.name <> 'NCDPI'
+
 -- Change the below to 1 for active students, have set to 0 to pull non-active for summer. Leave below commented out to allow all activeYear to export, use below if needed to filter out inactives during the school year. 
 -- AND s.activeToday = 0
