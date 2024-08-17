@@ -1,7 +1,8 @@
 /*
 	Title: Clever Teacher 
 	
-	Description: Change the email address at the bottom to your schools domain
+	Description: Change the email address at the bottom to your schools domain.
+                     Staff Members marked as teacher in district assignments
 	
 	Author: Jeremiah Jackson NCDPI
 	
