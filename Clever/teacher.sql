@@ -23,3 +23,4 @@ FROM staffmember sm
    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
 WHERE sm.enddate IS NULL AND c.email LIKE '%@haywood.k12.nc.us'
    AND (sm.endDate IS NULL OR sm.enddate > getdate())
+   AND sm.teacher = '1'
