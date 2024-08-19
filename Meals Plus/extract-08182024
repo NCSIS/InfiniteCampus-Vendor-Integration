@@ -10,6 +10,7 @@
 	Revision History:
 	07/12/2024		Initial creation of this template
 	08/17/2024		Changed SQL to allow for missing data and contacts by Emergency Contact #
+        08/18/2024		Change HH phone to student contact, and removed the joins for householdmember and household to fix duplicates
 
 
 */
@@ -124,7 +125,7 @@ SELECT
 	c3.firstName AS 'Guardian First',
     COALESCE(NULLIF(REPLACE(REPLACE(REPLACE(c3.homePhone, '(', ''), ')', ''), '-', ''), ''), REPLACE(REPLACE(REPLACE(c3.cellPhone, '(', ''), ')', ''), '-', '')) AS 'Guardian Day Phone',
 	c3.email AS 'Guardian Email',
-	REPLACE(REPLACE(REPLACE(REPLACE(hh.phone, ' ', ''), '(', ''), ')', ''), '-', '') AS 'Student Phone',
+	REPLACE(REPLACE(REPLACE(REPLACE(cs.householdphone, ' ', ''), '(', ''), ')', ''), '-', '') AS 'Student Phone',
 	cs.email AS 'Student Email'
 
 FROM v_AdHocStudent s
@@ -133,10 +134,8 @@ FROM v_AdHocStudent s
 	LEFT OUTER JOIN ContactsOrdered3 c3 ON s.personID = c3.personID AND c3.rowNumber = 1
 	INNER JOIN ContactSelf cs ON s.personID = cs.personID and cs.rowNumber = 1
 	INNER JOIN school sch ON sch.schoolid = s.schoolID
-	INNER JOIN contact c ON c.personID = s.personID
 	INNER JOIN Calendar cal ON s.calendarID = cal.calendarID
-	LEFT OUTER JOIN householdMember hm ON hm.personID = s.personID
-	LEFT OUTER JOIN Household hh ON hh.householdID = hm.householdID
+
 WHERE cal.calendarId=s.calendarId
 	AND s.studentNumber IS NOT NULL
 	AND s.studentNumber <> ''
