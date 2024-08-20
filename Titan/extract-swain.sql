@@ -90,6 +90,7 @@ SELECT
    c1.lastName AS 'Head of Household Last Name',
    COALESCE(c1.homePhone, c1.cellPhone) AS 'Head of Household Home Phone',
    c1.email AS 'Head of Household Email'
+-- c1.relationship AS 'Head of Household Relationship'
 
  
 
