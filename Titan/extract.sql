@@ -9,6 +9,7 @@
 	
 	Revision History:
 	08/15/2024		Initial creation of this template
+	08/20/2024 		Fixed Guardian Selection
 
         Make sure to check the box for:
         Include Header Row and Include Double quotes in IC Data Extract Utility
