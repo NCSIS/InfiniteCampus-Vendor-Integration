@@ -20,18 +20,18 @@
 WITH ContactsGrouped AS (
 	SELECT DISTINCT
 		cg.personID, cg.contactPersonID, cg.lastName, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, 
-		cg.addressLine1, cg.addressLine2, cg.city, cg.state, cg.zip, cg.seq, cg.relationship
+		cg.addressLine1, cg.addressLine2, cg.city, cg.state, cg.zip, cg.seq, cg.relationship,cg.guardian
 FROM  v_CensusContactSummary cg WITH (NOLOCK)
-GROUP BY cg.personID,cg.contactPersonID,cg.lastname, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, cg.addressLine1, cg.addressLine2, cg.city, cg.zip, cg.seq, cg.relationship, cg.state
+GROUP BY cg.personID,cg.contactPersonID,cg.lastname, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, cg.addressLine1, cg.addressLine2, cg.city, cg.zip, cg.seq, cg.relationship, cg.state,cg.guardian
 ),
 
 
--- Go through the Contacts Table and find the contact with the highest emergency priority.
+-- Go through the Contacts Table and find the two contacts with the highest emergency priority.
 -- See Below to only pull Contacts marked as guardians.  This is the preferred method but requires every student to have a guardian.
 ContactsOrdered AS (
 	SELECT DISTINCT
 		co.personID, co.contactPersonID, co.lastName, co.firstName, co.email, co.homePhone, co.cellPhone, co.addressLine1,
-		co.addressLine2, co.city, co.state, co.zip, co.seq, co.relationship,
+		co.addressLine2, co.city, co.state, co.zip, co.seq, co.relationship,co.guardian,
 		ROW_NUMBER() OVER (PARTITION BY co.personID ORDER BY co.seq) AS rowNumber
     FROM 
 		contactsGrouped co WITH (NOLOCK)
@@ -39,7 +39,7 @@ ContactsOrdered AS (
                 co.relationship <> 'Self' AND co.seq IS NOT NULL
 
 -- Uncomment the line below to only pull guardians. 
---		AND c.guardian = 1
+	AND co.guardian = 1
 ),
 
 -- Pull the contact for the student and not anyone else associated.
@@ -92,7 +92,10 @@ FROM student stu
 
 WHERE cal.calendarId=stu.calendarId
    AND sch.schoolID=cal.SchoolID
-   AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year.
+   AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
    AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
-   AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300 --Only get students from schools not programs
+   AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300
    AND stu.stateid IS NOT NULL
+
+   
+   
