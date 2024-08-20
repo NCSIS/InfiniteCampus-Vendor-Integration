@@ -11,6 +11,7 @@
 	07/12/2024		Initial creation of this template
 	08/17/2024		Changed SQL to allow for missing data and contacts by Emergency Contact #
         08/18/2024		Change HH phone to student contact, and removed the joins for householdmember and household to fix duplicates
+	08/20/2024		Fixed duplicate issue for Cross Enrolled Students.  Only pulling primary school now.
 
 
 */
@@ -143,3 +144,4 @@ WHERE cal.calendarId=s.calendarId
 	AND sch.schoolID=cal.SchoolID
     AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
     AND (s.endDate IS NULL or s.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
+	AND s.servicetype = 'P'
