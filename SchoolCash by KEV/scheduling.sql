@@ -2,7 +2,7 @@
 	Title: SchoolCash by KEV - Scheduling File
 	
 	Description:  Pull the schedule from NCSIS.  
-	Determines the Semester/YearLong based on number of classes. 
+	Determines the Semester/YearLong based on number of class terms. 
 	Determines the start date based on earliest Term Date and latest End Date.
 
 	Author: Jeremiah Jackson - NCDPI
