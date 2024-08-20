@@ -39,7 +39,7 @@ ContactsOrdered AS (
     WHERE 
                 co.relationship <> 'Self' AND co.seq IS NOT NULL
 
--- Uncomment the line below to only pull guardians. 
+-- comment out the line below to Emergency Contact regardless of guardian checkbox 
 	AND co.guardian = 1
 ),
 
