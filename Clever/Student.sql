@@ -9,6 +9,7 @@
 	
 	Revision History:
 	08/16/2024		Initial creation of this template
+        08/20/2024              Fixed Guardians to be selected
 
 
 Table LIST
@@ -30,9 +31,9 @@ aig = gifted
 WITH ContactsGrouped AS (
 	SELECT DISTINCT
 		cg.personID, cg.contactPersonID, cg.lastName, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, 
-		cg.addressLine1, cg.addressLine2, cg.city, cg.state, cg.zip, cg.seq, cg.relationship
+		cg.addressLine1, cg.addressLine2, cg.city, cg.state, cg.zip, cg.seq, cg.relationship, cg.guardian
 FROM  v_CensusContactSummary cg WITH (NOLOCK)
-GROUP BY cg.personID,cg.contactPersonID,cg.lastname, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, cg.addressLine1, cg.addressLine2, cg.city, cg.zip, cg.seq, cg.relationship, cg.state
+GROUP BY cg.personID,cg.contactPersonID,cg.lastname, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, cg.addressLine1, cg.addressLine2, cg.city, cg.zip, cg.seq, cg.relationship, cg.state, cg.guardian
 ),
 
 
@@ -40,15 +41,15 @@ GROUP BY cg.personID,cg.contactPersonID,cg.lastname, cg.firstName, cg.email, cg.
 ContactsOrdered AS (
 	SELECT DISTINCT
 		co.personID, co.contactPersonID, co.lastName, co.firstName, co.email, co.homePhone, co.cellPhone, co.addressLine1,
-		co.addressLine2, co.city, co.state, co.zip, co.seq, co.relationship,
+		co.addressLine2, co.city, co.state, co.zip, co.seq, co.relationship, co.guardian,
 		ROW_NUMBER() OVER (PARTITION BY co.personID ORDER BY co.seq) AS rowNumber
     FROM 
 		contactsGrouped co WITH (NOLOCK)
     WHERE 
 		co.relationship <> 'Self' AND co.seq IS NOT NULL
 
--- Uncomment the line below to only pull guardians. 
---		AND c.guardian = 1
+-- Comment out the line below to pull contacts even if guardian is not checked in NCSIS. 
+		AND co.guardian = 1
 ),
 
 -- Pull the contact for the student and not anyone else associated.
