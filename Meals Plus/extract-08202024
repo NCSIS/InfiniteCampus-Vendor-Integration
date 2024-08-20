@@ -11,8 +11,7 @@
 	07/12/2024		Initial creation of this template
 	08/17/2024		Changed SQL to allow for missing data and contacts by Emergency Contact #
         08/18/2024		Change HH phone to student contact, and removed the joins for householdmember and household to fix duplicates
-	08/20/2024		Fixed duplicate issue for Cross Enrolled Students.  Only pulling primary school now.
-
+ 	08/20/2024		Filter out Cross Enrolled Schools,  Inactive/Active based on Student End Date, Include inactive students in the sync
 
 */
 
@@ -88,9 +87,9 @@ SELECT
 	FORMAT(s.birthdate,'MM/dd/yyyy') AS 'Birth Date',
 	'' AS 'Entry Date',
 	CASE 
-		WHEN s.activeToday = 0 THEN 'I'
-		WHEN s.activeToday = 1 THEN 'A'
-		ELSE ''
+	    WHEN (s.endDate IS NULL or s.endDate>=GETDATE()) THEN 'A'
+		WHEN s.endDate <=GETDATE() THEN 'I'
+		ELSE 'I'
 	END AS 'Current Status',
 	'' AS 'Exit Date',
 	 /* Uncomment if we need a leading 0 to make 2 digits, example 09 instead of 9
@@ -143,5 +142,5 @@ WHERE cal.calendarId=s.calendarId
     AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300
 	AND sch.schoolID=cal.SchoolID
     AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
-    AND (s.endDate IS NULL or s.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
+--    AND (s.endDate IS NULL or s.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
 	AND s.servicetype = 'P'
