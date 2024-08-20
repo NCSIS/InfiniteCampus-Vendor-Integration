@@ -2,33 +2,37 @@
 	Title: SNAP by ProMed - Contacts File
 	
 	Description:
-
+	Creates a row for email and phone for each 2 contacts associated with each student
+	I am 100% sure there is a better way to do this, but their file format requires a new row
+	for each type of data and this was the way I knew how to do that. 
+	
 	Author: Jeremiah Jackson - NCDPI
 	
 	Revision History:
 	08/17/2024		Initial creation of this template
+	08/20/2024		Change contacts to require the guardian checkbox
 
 */
 
 -- Go through the contacts table and remove any duplicates.  Usually caused by the same contact being associated with the student more than once.
 WITH ContactsGrouped AS (
 	SELECT DISTINCT
-		cg.personID, cg.contactPersonID, cg.lastName, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, cg.seq, cg.relationship
+		cg.personID, cg.contactPersonID, cg.lastName, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, cg.seq, cg.relationship, cg.guardian
 FROM  v_CensusContactSummary cg WITH (NOLOCK)
-GROUP BY cg.personID,cg.contactPersonID,cg.lastname, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, cg.seq, cg.relationship
+GROUP BY cg.personID,cg.contactPersonID,cg.lastname, cg.firstName, cg.email, cg.homePhone, cg.cellPhone, cg.seq, cg.relationship, cg.guardian
 ),
 
 -- Go through the Contacts Table and find the contact with the highest emergency priority 
 -- See Below to only pull Contacts marked as guardians.  If you are sure you have guardians' checked in NCSIS, uncomment this line.
 ContactsOrdered AS (
 	SELECT DISTINCT
-		co.personID, co.contactPersonID, co.lastName, co.firstName, co.email, co.homePhone, co.cellPhone, co.seq, co.relationship,
+		co.personID, co.contactPersonID, co.lastName, co.firstName, co.email, co.homePhone, co.cellPhone, co.seq, co.relationship, co.guardian,
 		ROW_NUMBER() OVER (PARTITION BY co.personID ORDER BY co.seq) AS rowNumber
     FROM contactsGrouped co WITH (NOLOCK)
     WHERE co.relationship <> 'Self' AND co.seq IS NOT NULL
 
 -- Uncomment the line below to only pull guardians. 
---		AND c.guardian = 1
+	AND co.guardian = 1
 ),
 -- Pull the contact for the student and not anyone else associated.
 ContactSelf AS (
