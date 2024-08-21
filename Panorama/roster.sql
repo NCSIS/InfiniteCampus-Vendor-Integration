@@ -1,5 +1,5 @@
 /*
-	Title:Panorama - Roster File  (student file)
+	Title:Panorama - Roster File
 	
 	Description:
 
@@ -22,10 +22,11 @@ WITH ContactSelf AS (
 SELECT
    student.personid, student.stateID, student.studentNumber, student.lastName, student.firstName, student.middleName,
    student.gender, student.birthdate, student.grade, student.activeToday, pcontact.email, cal.calendarid, 
-   cal.number AS 'cal.schoolID', cal.name
+   sch.number AS 'cal.schoolID', cal.name
 FROM v_adhocstudent student
 	INNER JOIN Calendar cal ON student.calendarid = cal.calendarid
 	INNER JOIN ContactSelf pcontact ON pcontact.personid = student.personid AND pcontact.rowNumber = 1
+	INNER JOIN school sch ON sch.schoolID = student.schoolID
 
 
 WHERE cal.calendarId=student.calendarId
