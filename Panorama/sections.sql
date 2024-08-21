@@ -23,7 +23,7 @@ SELECT
 FROM v_SectionInfo sectioninfo
 	INNER JOIN v_CourseInfo courseInfo ON sectioninfo.courseID = courseinfo.courseID
 	INNER JOIN calendar cal ON cal.calendarid = sectioninfo.calendarID
-    	INNER JOIN v_GradingTaskCredit gradingTaskCredit ON sectioninfo.courseID = gradingTaskCredit.courseID
+    	INNER JOIN v_GradingTaskCredit gradingTaskCredit ON sectioninfo.courseID = gradingTaskCredit.courseID AND gradingTaskCredit.credit IS NOT NULL
 	INNER JOIN v_SectionSchedule sectionSchedule ON sectionschedule.sectionid = sectioninfo.sectionID
 	INNER JOIN school sch ON courseinfo.schoolID = sch.schoolID
 WHERE cal.calendarId=sectioninfo.calendarId
