@@ -2,7 +2,6 @@
 	Title:Panorama - Sections
 	
 	Description: 
-	This is showing all active students and all enrollment changes. 
 	
 	Author: Jeremiah Jackson - NCDPI
 	
@@ -24,11 +23,12 @@ SELECT
 FROM v_SectionInfo sectioninfo
 	INNER JOIN v_CourseInfo courseInfo ON sectioninfo.courseID = courseinfo.courseID
 	INNER JOIN calendar cal ON cal.calendarid = sectioninfo.calendarID
-    INNER JOIN v_GradingTaskCredit gradingTaskCredit ON sectioninfo.courseID = gradingTaskCredit.courseID
+    	INNER JOIN v_GradingTaskCredit gradingTaskCredit ON sectioninfo.courseID = gradingTaskCredit.courseID
 	INNER JOIN v_SectionSchedule sectionSchedule ON sectionschedule.sectionid = sectioninfo.sectionID
 	INNER JOIN school sch ON courseinfo.schoolID = sch.schoolID
 WHERE cal.calendarId=sectioninfo.calendarId
-   AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() 
+   	AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() 
+ORDER BY sectioninfo.sectionID 
 	
 	
 	
