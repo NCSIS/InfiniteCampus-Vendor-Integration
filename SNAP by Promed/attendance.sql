@@ -28,6 +28,6 @@ WHERE cal.calendarId=stu.calendarId
    AND sch.schoolID=cal.SchoolID
    AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
    AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
-   AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300
+   AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000'
    AND stu.stateid IS NOT NULL
    AND stu.stateid <> ''
