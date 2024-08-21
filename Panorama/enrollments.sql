@@ -15,11 +15,12 @@
 SELECT
 	student.personid, student.stateid, student.studentnumber, student.firstName, student.lastName,
 	roster.rosterID, roster.trialID, roster.sectionID, roster.startDate, roster.EndDate,
-	cal.calendarID, cal.number, cal.name
+	cal.calendarID, sch.number AS 'cal.schoolID', cal.name
 	
 FROM roster
 	INNER JOIN v_AdhocStudent student ON student.personID = roster.personid
 	INNER JOIN calendar cal ON cal.calendarid = student.calendarid
+	INNER JOIN school sch ON sch.schoolID = student.schoolID
 	
 
 WHERE cal.calendarId=student.calendarId
