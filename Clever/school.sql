@@ -18,3 +18,4 @@ select
    sch.principalEmail as 'Principal_email'
 
 FROM school sch
+WHERE CAST(substring(sch.number,4,3) AS INTEGER) >= 300
