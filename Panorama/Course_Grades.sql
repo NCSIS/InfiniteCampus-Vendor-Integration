@@ -20,13 +20,14 @@ SELECT
 	grading.sectionID, grading.sectionNumber, grading.termID, grading.termName, grading.task, grading.score, grading."percent", 
 	student.firstName, student.lastName,
 	grading.courseName, grading.teacherDisplay, gs.progressScore AS 'grading.progressScore', grading.progressPercent, grading.scoreID,
-	cal.calendarID, cal.number AS 'cal.schoolID', cal.name, 
+	cal.calendarID, sch.number AS 'cal.schoolID', cal.name, 
 	grading.taskID, grading.taskSeq, grading.standardID, grading.abbreviation
 
 FROM v_GradingDetail grading
 	INNER JOIN v_AdhocStudent student ON grading.personID = student.personID
 	INNER JOIN calendar cal ON cal.calendarid = grading.calendarid
 	INNER JOIN gradingscore gs ON gs.scoreid = grading.scoreid
+	INNER JOIN school sch on sch.schoolID = student.schoolID
 -- LEFT OUTER JOIN gradingscore gs ON gs.scoreid = grading.scoreid
 
 WHERE cal.calendarId=grading.calendarId
