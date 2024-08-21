@@ -1,0 +1,42 @@
+/*
+	Title:Panorama - Roster - Protected Student Data
+	
+	Description: uncomment the student types you want.
+	
+	Author: Jeremiah Jackson - NCDPI
+	
+	Revision History:
+	08/20/2024		Initial creation of this template
+
+*/
+
+SELECT	
+	student.personID, student.stateID, student.studentNumber, 
+	cal.calendarID, sch.number as 'cal.schoolID', cal.name,
+	
+-- Student Race
+	student.raceEthnicityFed
+
+-- ML status
+--	ML.ProgramStatus AS 'LepService.LEPService'
+
+-- Exceptional Children Status
+-- 	activeEnrollment.specialEdStatus, activeEnrollment.specialEdSetting, activeenrollment.primarydisability AS 'activeEnrollment.disability1', 
+--	activeenrollment.secondaryDisability AS 'activeEnrollment.disability2', activeenrollment.disability3,
+--	activeenrollment.ExitDate as 'activeEnrollment.spedExitDate', activeenrollment.exitreason as 'activeEnrollment.spedExitReason', 
+
+
+-- Homeless Status
+--	homeless.programstatus as 'activeEnrollment.homeless',
+
+-- Free and Reduced Lunch
+--	posElig.eligibility, posElig.elig_endDate AS 'posElig.endDate', posElig.eligibilityType AS 'posElig.type'
+	
+FROM v_AdhocStudent student
+	INNER JOIN calendar cal ON student.calendarID = cal.calendarID
+	INNER JOIN school sch on cal.schoolid = sch.schoolID
+	LEFT OUTER JOIN LEP ML ON ml.personID = student.personID
+	LEFT OUTER JOIN v_POSEligibilityCurrent posElig ON posElig.personID = student.personID
+	LEFT OUTER JOIN SpecialEdState activeEnrollment ON activeEnrollment.personid = student.personID
+	LEFT OUTER JOIN homeless homeless ON homeless.personid = student.personid
+	
