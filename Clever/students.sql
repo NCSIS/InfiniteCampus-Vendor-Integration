@@ -75,14 +75,12 @@ AIGOrdered AS (
 
 SELECT 
 	sch.number AS 'School_ID',
-    s.personID AS 'STUDENTS.ID', -- NCSIS ID used to combine with Sections and Enrollments
+    	s.personID AS 'Student_ID', -- NCSIS ID used to combine with Sections and Enrollments
 	s.studentNumber AS 'Student_number', 
 	s.stateID AS 'State_id',
 	s.lastName AS 'Last_name',
 	s.middleName AS 'Middle_name',
 	s.firstName AS 'First_name', 
-	s.gender AS 'Gender',
-
 -- Change Grade to Clever Format
 	CASE
 		WHEN s.grade = 'KG' THEN 'Kindergarten'
@@ -92,6 +90,7 @@ SELECT
 		WHEN s.grade = 'OS' THEN 'Ungraded'
 		ELSE s.grade  
 	END AS 'Grade',  
+	s.gender AS 'Gender',
 -- Convert Grade to Graduation Year
 	CASE
       WHEN s.grade = '13' THEN CONVERT(numeric,cal.endyear)
