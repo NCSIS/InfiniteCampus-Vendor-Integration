@@ -10,6 +10,7 @@
 	Revision History:
 	08/16/2024		Initial creation of this template
         08/20/2024              Fixed Guardians to be selected
+	08/21/2024		Only choose primary school 
 
 
 Table LIST
@@ -182,3 +183,4 @@ WHERE cal.calendarId=s.calendarId
    AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300
    AND s.stateid IS NOT NULL
    AND s.stateid <> ''
+   AND s.servicetype = 'P'  -- Only choose primary school
