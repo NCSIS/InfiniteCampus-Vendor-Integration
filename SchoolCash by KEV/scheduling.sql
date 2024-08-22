@@ -59,11 +59,11 @@ select DISTINCT
 		WHEN tws.TCount = 3 AND (sp.termname = 'T4' or sp.termname = 'T5' or sp.termname = 'T6') THEN 'S2'	
 	ELSE 'Other'
 	END AS 'Course_Semester',
-	FORMAT(sd.semesterstart,MM/dd/yyyy) AS 'Semester_Start_Date',
-	FORMAT(sd.semesterend, MM/dd/yyyy) AS 'Semester_End_Date',
+	FORMAT(sd.semesterstart,'MM/dd/yyyy') AS 'Semester_Start_Date',
+	FORMAT(sd.semesterend, 'MM/dd/yyyy') AS 'Semester_End_Date',
 	sp.termname AS 'Course_Term',
-	FORMAT(sp.termStartDate, MM/dd/yyyy) AS 'Course_Term_Start_Date',
-	FORMAT(sp.termEndDate, MM/dd/yyyy) AS 'Course_Term_End_Date',
+	FORMAT(sp.termStartDate, 'MM/dd/yyyy') AS 'Course_Term_Start_Date',
+	FORMAT(sp.termEndDate, 'MM/dd/yyyy') AS 'Course_Term_End_Date',
 	cal.endYear AS 'Course_School_Year',
 	t.staffStateID AS 'Course_Teacher_ID_Number',
 	'' AS 'Reserved-6',
