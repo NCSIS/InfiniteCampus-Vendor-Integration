@@ -16,8 +16,8 @@ SELECT DISTINCT
      sm.personID AS 'Teacher_id',
      sm.staffstateID as 'Teacher_number',
      sm.staffstateID as 'State_teacher_id',
-     sm.firstName as 'First_name',
      sm.lastname as 'Last_name',
+     sm.firstName as 'First_name',
      c.email as 'Teacher_email'
 
 FROM staffmember sm 
