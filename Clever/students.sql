@@ -174,7 +174,6 @@ WHERE cal.calendarId=s.calendarId
    AND sch.schoolID=cal.SchoolID
    AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
    AND (s.endDate IS NULL or s.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
-   AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300
-   AND s.stateid IS NOT NULL
-   AND s.stateid <> ''
+   AND (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
+   AND (s.stateid IS NOT NULL or s.stateid <> '')
    AND s.servicetype = 'P'  -- Only choose primary school
