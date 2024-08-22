@@ -12,6 +12,7 @@
 	08/17/2024		Changed SQL to allow for missing data and contacts by Emergency Contact #
         08/18/2024		Change HH phone to student contact, and removed the joins for householdmember and household to fix duplicates
  	08/20/2024		Filter out Cross Enrolled Schools,  Inactive/Active based on Student End Date, Include inactive students in the sync
+	08/22/2024		Fixed some duplicate and filter issues
 
 */
 
