@@ -12,12 +12,11 @@
 
 SELECT DISTINCT
      sm.schoolnumber as 'School_id',
-     sm.personID AS 'Teacher_id',
-     sm.staffstateID as 'Teacher_number',
-     sm.staffstateID as 'State_teacher_id',
+     sm.personID AS 'Staff_id',
+     c.email as 'Staff_email',
      sm.firstName as 'First_name',
-     sm.lastname as 'Last_name',
-     c.email as 'Teacher_email'
+     sm.lastname as 'Last_name'
+
 
 FROM staffmember sm 
    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
