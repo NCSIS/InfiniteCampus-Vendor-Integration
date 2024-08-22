@@ -7,6 +7,7 @@
 	
 	Revision History:
 	08/16/2024		Initial creation of this template
+	08/22/2024		Added StaffStateID
 
 */
 
@@ -15,7 +16,8 @@ SELECT DISTINCT
      sm.personID AS 'Staff_id',
      c.email as 'Staff_email',
      sm.firstName as 'First_name',
-     sm.lastname as 'Last_name'
+     sm.lastname as 'Last_name',
+     sm.staffstateid as 'Username'
 
 
 FROM staffmember sm 
