@@ -8,6 +8,7 @@
 	
 	Revision History:
 	08/06/2024		Initial creation of this template
+	08/22/2024		Fixed a student filter issue and added '000' schools to support charters
 
 */
 
@@ -126,8 +127,7 @@ LEFT OUTER JOIN school sch ON sch.schoolID = stu.schoolID
 WHERE 
 -- Select the current school year
 	stu.activeYear = 1
-	AND stu.studentNumber IS NOT NULL
-	AND stu.studentNumber <> ''
-	AND CAST(substring(sch.number,4,3) AS INTEGER) > 300
+	AND (stu.studentNumber IS NOT NULL or stu.studentNumber <> '')
+	AND (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
 	AND (ISNUMERIC(stu.grade) = '1' OR stu.grade = 'KG' OR stu.grade = 'OS')
     AND stu.activeToday = 1
