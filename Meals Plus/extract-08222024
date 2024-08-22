@@ -136,11 +136,12 @@ FROM v_AdHocStudent s
 	INNER JOIN school sch ON sch.schoolid = s.schoolID
 	INNER JOIN Calendar cal ON s.calendarID = cal.calendarID
 
-WHERE cal.calendarId=s.calendarId
-	AND s.studentNumber IS NOT NULL
-	AND s.studentNumber <> ''
+WHERE s.calendarId=cal.calendarid
+    AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
     AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000'
 	AND sch.schoolID=cal.SchoolID
     AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
 --    AND (s.endDate IS NULL or s.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
 	AND s.servicetype = 'P'
+	AND s.studentNumber IS NOT NULL
+	AND s.studentNumber <> ''
