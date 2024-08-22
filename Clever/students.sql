@@ -113,7 +113,7 @@ SELECT
 	  WHEN s.grade = 'IT' THEN (Convert(numeric,cal.endyear)+15)
 	END AS GraduationYear,
 -- Change Birthday Format into MM/DD/YYYY
-	FORMAT(s.birthdate,'MM/dd/yyyy') AS 'DOB',
+	FORMAT(s.birthdate,'MM/dd/yyyy') AS 'Dob',
 -- Change Ethnicity to Clever Format
 	CASE
 		WHEN s.raceEthnicityFed = '1' THEN 'W' -- 'Hispanic/Latino' Clever doesn't appear to support FedRace Code 1
@@ -126,27 +126,24 @@ SELECT
 		ELSE s.raceEthnicityFed
 	END AS 'Race',  	
 	s.hispanicEthnicity AS 'Hispanic_Latino',	
-	CASE
-		WHEN s.homeprimarylanguage IS NULL THEN 'eng'
-		ELSE s.homeprimarylanguage 
-	END AS 'Home_Language',
 
 
 
 -- The fields below are commented out for privacy reasons.
 -- Remove the comment if you need these fields
 -- ======================================================
---	aig1.programStatus AS 'Gifted_status',		
 --	ml.programStatus AS 'Ell_status',
---	ec.PrimaryDisability AS 'Disability_type',
 --	CASE WHEN ec.PlanType = 'IEP' THEN 'Y' ELSE 'N' END AS 'IEP_status',
 
 -- Student Home Address.  Uncomment if you need.
 -- ===============================================
+--	cs.AddressLine1 AS 'Student_street',
 --	cs.city AS 'Student_city',
 --	cs.state AS 'Student_state',
---	cs.AddressLine1 AS 'Student_street',
---	cs.zip AS 'Student_Zip',
+--	cs.zip AS 'Student_zip',
+
+-- Student Email
+	cs.email AS 'Student_email'
 	
 -- Only uncomment if needed.  This is guardian contact info.
 -- c1 is guardian with lowest emergency priority. 
@@ -156,11 +153,9 @@ SELECT
 --	CONCAT(c1.firstName, ' ', c1.lastName) AS 'Contact_name',
 --	COALESCE(NULLIF(REPLACE(REPLACE(REPLACE(c1.homePhone, '(', ''), ')', ''), '-', ''), ''), REPLACE(REPLACE(REPLACE(c1.cellPhone, '(', ''), ')', ''), '-', '')) AS 'Contact_phone',
 --	c1.email AS 'Contact_email',
---	c1.personid AS 'Contact_sis_id',
 
 
--- Student Email
-	cs.email AS 'Student_email'
+
 	
 
 
