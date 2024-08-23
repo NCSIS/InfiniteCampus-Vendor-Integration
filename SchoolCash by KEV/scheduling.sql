@@ -85,5 +85,4 @@ LEFT OUTER JOIN SixWeekSemester tws ON en.sectionID = tws.sectionID
 LEFT OUTER JOIN SemesterDate sd ON sd.sectionID = en.sectionID
 
 WHERE cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
-    AND s.studentNumber IS NOT NULL
-	AND s.studentNumber <> ''
+    AND stu.studentNumber IS NOT NULL
