@@ -30,8 +30,12 @@ FROM
 	INNER JOIN v_AdhocStudent student ON student.personID = behaviorDetail.personID
 	INNER JOIN calendar cal ON cal.calendarID = student.calendarID
 	INNER JOIN school sch ON sch.schoolID = student.schoolID
-WHERE 
-	cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
-   	AND (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
-	
-	
+WHERE
+    cal.startDate <= GETDATE()
+    AND cal.endDate >= GETDATE() -- Get only calendars for the current year
+    AND behaviorDetail.incidentDate >= DATEADD(YEAR, -1, DATEFROMPARTS(cal.endyear, 7, 1))
+    AND behaviorDetail.incidentDate < DATEFROMPARTS(cal.endyear, 7, 1)
+    AND (
+        CAST(SUBSTRING(sch.number, 4, 3) AS INTEGER) >= 300
+        OR SUBSTRING(sch.number, 4, 3) = '000'
+    );
