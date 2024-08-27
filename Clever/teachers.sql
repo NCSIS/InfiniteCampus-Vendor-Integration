@@ -18,7 +18,8 @@ SELECT DISTINCT
      sm.staffstateID as 'State_teacher_id',
      sm.lastname as 'Last_name',
      sm.firstName as 'First_name',
-     c.email as 'Teacher_email'
+     c.email as 'Teacher_email',
+     sm.title as 'Title'	
 
 FROM staffmember sm 
    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
