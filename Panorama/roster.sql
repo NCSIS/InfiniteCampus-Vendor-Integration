@@ -33,6 +33,5 @@ WHERE cal.calendarId=student.calendarId
    AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
    AND (student.endDate IS NULL or student.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
    AND student.stateid IS NOT NULL
-   AND student.stateid <> ''
 	
 	
