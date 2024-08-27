@@ -21,6 +21,8 @@ FROM employment
 	INNER JOIN contact pcontact ON pcontact.personID = employment.personID
 	INNER JOIN v_SchoolEmployment schoolEmployment ON schoolEmployment.personID = employment.personID
 	INNER JOIN school sch ON sch.schoolID = schoolemployment.schoolID
+WHERE 
+	pcontact.email LIKE '%@haywood.k12.nc.us'
 	
 	
 	
