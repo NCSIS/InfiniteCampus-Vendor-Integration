@@ -16,5 +16,5 @@ Select
 FROM 
   school sch
 WHERE 
-  CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000'
+  (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
   
