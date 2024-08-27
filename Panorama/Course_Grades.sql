@@ -19,7 +19,7 @@ SELECT
 	student.personID, student.stateID, student.studentNumber,
 	grading.sectionID, grading.sectionNumber, grading.termID, grading.termName, grading.task, grading.score, grading."percent", 
 	student.firstName, student.lastName,
-	grading.courseName, grading.teacherDisplay, gs.progressScore AS 'grading.progressScore', grading.progressPercent, grading.scoreID,
+	grading.courseName, grading.teacherDisplay, gs.progressScore AS 'grading.progressScore', gs.progresspercent AS 'grading.progressPercent', grading.scoreID,
 	cal.calendarID, sch.number AS 'cal.schoolID', cal.name, 
 	grading.taskID, grading.taskSeq, grading.standardID, grading.abbreviation
 
