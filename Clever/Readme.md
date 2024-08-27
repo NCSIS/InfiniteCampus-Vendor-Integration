@@ -1,4 +1,8 @@
-Clever has OneRoster integration,  however if you are having issue with that integration you can use these SQL files to generate the files needed to upload into Clever.
+If you previously syncd your Clever with OneRoster your student and teacher IDs will be in one of these formats.
+
+PersonID = number that is 4-6 digits 
+GUID = LONG alpha numeric number IE:XXXXXXX-XXXX-XXXX-XXXXXXXXXXXX
+
 
 The file format can be found here
 https://schools.clever.com/files/clever-sftp.pdf
