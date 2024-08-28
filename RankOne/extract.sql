@@ -102,13 +102,13 @@ SELECT
 	'' AS 'Notes',
 
 	CASE
-		WHEN stu.raceEthnicityFed = '1' THEN '4' -- 'Hispanic/Latino' Clever doesn't appear to support FedRace Code 1
+		WHEN stu.raceEthnicityFed = '1' THEN '4' -- 'Hispanic/Latino' -- RankOne uses 4 for Hispanic
 		WHEN stu.raceEthnicityFed = '2' THEN '2' -- 'AmericanIndian/Native'
 		WHEN stu.raceEthnicityFed = '3' THEN '3' -- 'Asian'
-		WHEN stu.raceEthnicityFed = '4' THEN '1' -- 'African-American/Black'
-		WHEN stu.raceEthnicityFed = '5' THEN '6' -- 'Hawaiian/PacificIslander'
+		WHEN stu.raceEthnicityFed = '4' THEN '1' -- 'African-American/Black' -- RankOne uses 1 for Black
+		WHEN stu.raceEthnicityFed = '5' THEN '6' -- 'Hawaiian/PacificIslander' -- RankOne does not support Hawaiian using 6 = Other
 		WHEN stu.raceEthnicityFed = '6' THEN '5' -- 'Caucasian/White'
-		WHEN stu.raceEthnicityFed = '7' THEN '6' -- 'MultiRacial'
+		WHEN stu.raceEthnicityFed = '7' THEN '6' -- 'MultiRacial' -- 6 = Other
 		ELSE stu.raceEthnicityFed
 	END AS 'Ethnicity'  --Having to change codes to meet their format instead of the federal codes
 
