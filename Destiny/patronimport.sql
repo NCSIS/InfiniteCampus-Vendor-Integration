@@ -8,21 +8,12 @@
 	
 	Revision History:
 	08/16/2024		Initial creation of this template
+	08/28/2024		Made more efficient for larger school districts.
 
 
 */
 
 
--- Pull the contact for the student and not anyone else associated.
-WITH ContactSelf AS (
-	SELECT DISTINCT
-		c.personID, c.lastName, c.firstName, c.email, c.householdPhone, c.seq, c.relationship, c.AddressLine1, c.city, c.state, c.zip,
-		ROW_NUMBER() OVER (PARTITION BY c.personID ORDER BY c.seq) AS rowNumber
-    FROM 
-		v_CensusContactSummary c WITH (NOLOCK)
-    WHERE 
-                c.relationship = 'Self'
-)
 
 
 
@@ -78,7 +69,13 @@ CASE
 FROM student stu
    INNER JOIN calendar cal ON cal.calendarID = stu.calendarId
    INNER JOIN school sch ON sch.schoolID = cal.schoolID
-   LEFT OUTER JOIN ContactSelf cs ON stu.personID = cs.personID AND cs.rowNumber = 1
+    CROSS APPLY (
+        SELECT TOP 1 * 
+        FROM v_CensusContactSummary cs 
+        WHERE cs.personID = stu.personID 
+        AND cs.relationship = 'Self' 
+        ORDER BY cs.contactID DESC
+    ) cs
    LEFT OUTER JOIN v_AdHocStudent ahs ON stu.personID = ahs.personID and ahs.calendarID = stu.calendarid
 
 WHERE cal.calendarId=stu.calendarId
