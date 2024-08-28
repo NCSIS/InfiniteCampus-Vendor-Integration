@@ -9,7 +9,7 @@
 */
 
 select
-    sch.identifier AS 'School_id',
+    sch.schoolGUID AS 'School_id',
     e.sectionID AS 'Section_id',
     stu.personGUID AS 'Student_id'
 
