@@ -153,6 +153,7 @@ SELECT
 --	CONCAT(c1.firstName, ' ', c1.lastName) AS 'Contact_name',
 --	COALESCE(NULLIF(REPLACE(REPLACE(REPLACE(c1.homePhone, '(', ''), ')', ''), '-', ''), ''), REPLACE(REPLACE(REPLACE(c1.cellPhone, '(', ''), ')', ''), '-', '')) AS 'Contact_phone',
 --	c1.email AS 'Contact_email',
+--	c1.contactGUID AS 'Contact_sis_id' -- may not be needed but it helps make sure that contacts don't get duplicated.	
 
 
 
