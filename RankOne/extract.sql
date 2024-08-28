@@ -59,7 +59,7 @@ SELECT
 	stu.lastName AS '*Last Name',
 	stu.firstName AS '*First Name',
 	stu.middleName AS '*Middle Name',
-	'' AS '*Active',
+	'Y' AS '*Active',
 	stu.gender AS '*Gender',
 	FORMAT(stu.birthdate,'MM/dd/yyyy') AS '*DOB',
 	'' AS 'Age',
