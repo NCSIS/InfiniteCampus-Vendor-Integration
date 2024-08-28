@@ -11,7 +11,7 @@
 */
 
 select
-   sch.number as 'School_id',
+   sch.schoolGUID as 'School_id',
    sch.name as 'School_name',
    sch.number as 'School_number',
    sch.principalName as 'Principal',
