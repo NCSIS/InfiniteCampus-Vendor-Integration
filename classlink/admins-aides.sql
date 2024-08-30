@@ -20,20 +20,14 @@ SELECT DISTINCT
 		WHEN sm.supervisor = '1' THEN 'administrator'
 		ELSE 'aide'
 	END AS 'role',
-	 left(c.email, charindex('@', c.email) - 1) AS 'username',
-     sm.firstName as 'givenName',
-	 sm.firstName as 'familyName',
---	 sm.middleName as 'middleName',
-	 sm.staffstateID AS 'identifier',
-	 c.email AS 'email',
---	 COALESCE(c.homePhone, c.cellPhone) AS 'phone',
-     ident.identityGUID AS 'Teacher_id',
-     sm.staffstateID as 'Teacher_number',
-     sm.staffstateID as 'State_teacher_id',
-     sm.lastname as 'Last_name',
-     sm.firstName as 'First_name',
-     c.email as 'Teacher_email',
-     sm.title as 'Title'	
+	left(c.email, charindex('@', c.email) - 1) AS 'username',
+	sm.firstName as 'givenName',
+	sm.lastName as 'familyName',
+--	sm.middleName as 'middleName',
+	sm.staffstateID AS 'identifier',
+	c.email AS 'email',
+--	COALESCE(c.homePhone, c.cellPhone) AS 'phone'
+
 
 FROM staffmember sm 
    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
