@@ -18,6 +18,7 @@ SELECT DISTINCT
      c.email as 'Staff_email',
      sm.firstName as 'First_name',
      sm.lastname as 'Last_name',
+     sm.title as 'Title',
      sm.staffstateid as 'Username'
 
 
