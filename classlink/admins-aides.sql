@@ -25,7 +25,7 @@ SELECT DISTINCT
 	sm.lastName as 'familyName',
 --	sm.middleName as 'middleName',
 	sm.staffstateID AS 'identifier',
-	c.email AS 'email',
+	c.email AS 'email'
 --	COALESCE(c.homePhone, c.cellPhone) AS 'phone'
 
 
