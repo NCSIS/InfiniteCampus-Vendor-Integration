@@ -12,6 +12,7 @@
 	08/20/2024		Fixes Guardian selection
 	08/20/2024		Added Optional Fields
 	08/22/2024		Added a few more optional fields based on feedback from Titan
+        09/3/2024		Fix to only select primary school
 
         Make sure to check the box for:
         Include Header Row and Include Double quotes in IC Data Extract Utility
@@ -111,6 +112,8 @@ WHERE cal.calendarId=stu.calendarId
    AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
    AND CAST(substring(sch.number,4,3) AS INTEGER) >= 300 --Charter schools need to remove this line.
    AND stu.stateid IS NOT NULL
+   AND stu.servicetype = 'P'  -- Only choose primary school
+-- AND stu.startstatus <> 'X1' -- Uncomment if the above doesn't fix cross enrollment
 
    
    
