@@ -5,6 +5,7 @@
 	
 	Revision History:
 	08/16/2024		Initial creation of this template
+	09/05/2024		Fixed to removed Enrollments with an endDate
 
 */
 
