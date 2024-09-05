@@ -5,6 +5,7 @@
 	
 	Revision History:
 	08/16/2024		Initial creation of this template
+	09/05/2024		Fixed to removed Enrollments with an endDate
 
 */
 
@@ -17,3 +18,4 @@ select
 from V_OneRosterStudentEnrollment e
 INNER JOIN v_OneRosterSchool sch ON sch.SchoolID = e.schoolID
 INNER JOIN student stu ON stu.personID = e.personid
+WHERE (e.endDate IS NULL or e.endDate>=GETDATE()) 
