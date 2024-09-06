@@ -12,7 +12,8 @@
 	08/20/2024		Fixes Guardian selection
 	08/20/2024		Added Optional Fields
 	08/22/2024		Added a few more optional fields based on feedback from Titan
-        09/3/2024		Fix to only select primary school
+        09/3/2024		Fix to only select primary school	
+	09/6/2024		Formatted Date in Start and Drop Date
 
         Make sure to check the box for:
         Include Header Row and Include Double quotes in IC Data Extract Utility
@@ -81,8 +82,8 @@ SELECT
    sch.number AS 'School (Site)',
    cal.name AS 'Calendar',
    stu.grade AS 'Grade',
-   stu.startdate AS 'Start Date',
-   stu.enddate AS 'Drop Date',
+   FORMAT(stu.startdate, 'MM/dd/yyyy') AS 'Start Date',
+   FORMAT(stu.enddate, 'MM/dd/yyyy') AS 'Drop Date',
    ahs.homeroomTeacher AS 'Homeroom (Teacher Name)',
    cs.householdID AS 'Household ID',
    CASE when stu.homeprimarylanguage IS NULL THEN 'eng' ELSE stu.homeprimarylanguage END AS 'Home Language',
