@@ -7,31 +7,44 @@
 	
 	Revision History:
 	08/20/2024		Initial creation of this template
+	09/06/2024		Uncommented and removed duplicates and added AIG status
 
 */
+-- Go through the AIG table and take the latest AIG startDate to remove duplicates.
+WITH AIGOrdered AS (
+	SELECT 
+		aig.personID, aig.programStatus, aig.identificationArea, aig.startDate, 
+		ROW_NUMBER() OVER (PARTITION BY aig.personID ORDER BY aig.startDate DESC) AS rowNumber
+    FROM 
+		gifted aig WITH (NOLOCK)
+)
 
-SELECT	
+
+SELECT	DISTINCT
 	student.personID, student.stateID, student.studentNumber, 
 	cal.calendarID, sch.number as 'cal.schoolID', cal.name,
 	
 -- Student Race
-	student.raceEthnicityFed
+	student.raceEthnicityFed,
 
 -- ML status
---	ML.ProgramStatus AS 'LepService.LEPService'
+	ML.ProgramStatus AS 'LepService.LEPService',
 
 -- Exceptional Children Status
--- 	activeEnrollment.specialEdStatus, activeEnrollment.specialEdSetting, activeenrollment.primarydisability AS 'activeEnrollment.disability1', 
---	activeenrollment.secondaryDisability AS 'activeEnrollment.disability2', activeenrollment.disability3,
---	activeenrollment.ExitDate as 'activeEnrollment.spedExitDate', activeenrollment.exitreason as 'activeEnrollment.spedExitReason', 
+ 	activeEnrollment.specialEdStatus, activeEnrollment.specialEdSetting, activeenrollment.primarydisability AS 'activeEnrollment.disability1', 
+	activeenrollment.secondaryDisability AS 'activeEnrollment.disability2', activeenrollment.disability3,
+	activeenrollment.ExitDate as 'activeEnrollment.spedExitDate', activeenrollment.exitreason as 'activeEnrollment.spedExitReason', 
 
 
 -- Homeless Status
---	homeless.programstatus as 'activeEnrollment.homeless',
+	homeless.programstatus as 'activeEnrollment.homeless',
 
 -- Free and Reduced Lunch
---	posElig.eligibility, posElig.elig_endDate AS 'posElig.endDate', posElig.eligibilityType AS 'posElig.type'
-	
+	posElig.eligibility, posElig.elig_endDate AS 'posElig.endDate', posElig.eligibilityType AS 'posElig.type',
+
+-- AIG Status
+	aig1.programStatus AS 'Gifted_status'
+
 FROM v_AdhocStudent student
 	INNER JOIN calendar cal ON student.calendarID = cal.calendarID
 	INNER JOIN school sch on cal.schoolid = sch.schoolID
@@ -39,4 +52,13 @@ FROM v_AdhocStudent student
 	LEFT OUTER JOIN v_POSEligibilityCurrent posElig ON posElig.personID = student.personID
 	LEFT OUTER JOIN SpecialEdState activeEnrollment ON activeEnrollment.personid = student.personID
 	LEFT OUTER JOIN homeless homeless ON homeless.personid = student.personid
+        LEFT OUTER JOIN aigOrdered aig1 ON aig1.personID = student.personID AND aig1.rowNumber = 1
+
+WHERE cal.calendarId=student.calendarId
+   AND sch.schoolID=cal.SchoolID
+   AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
+   AND (student.endDate IS NULL or student.endDate>=GETDATE()) --Gtudentet students with no end-date or future-dated end date
+   AND (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
+   AND student.stateid IS NOT NULL
+   AND student.servicetype = 'P'  -- Only choose primary school
 	
