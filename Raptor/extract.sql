@@ -7,6 +7,7 @@
 	
 	Revision History:
 	09/03/2024		Initial creation of this template
+	09/06/2024		Added School number and Name
 
 */
 
@@ -17,7 +18,9 @@ SELECT
 	FORMAT(stu.birthdate,'MM/dd/yyyy') AS 'Date of Birth',
 	stu.stateID AS 'ID Number',
 	stu.gender AS 'Gender',
-	stu.grade AS 'Grade'
+	stu.grade AS 'Grade',
+	sch.number AS 'School Number',
+	sch.name AS 'School Name'
 	
 FROM student stu
    INNER JOIN calendar cal ON cal.calendarID = stu.calendarId
@@ -28,4 +31,3 @@ WHERE cal.calendarId=stu.calendarId
    AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
    AND (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
    AND stu.stateid IS NOT NULL
-
