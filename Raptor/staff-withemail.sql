@@ -27,5 +27,5 @@ SELECT DISTINCT
 FROM staffmember sm 
    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
 WHERE (sm.endDate IS NULL OR sm.enddate > getdate())
-	AND c.email LIKE 'cravenk12.org'
+	AND c.email LIKE '%cravenk12.org'
 
