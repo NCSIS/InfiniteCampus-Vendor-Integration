@@ -6,7 +6,7 @@
 	Author: Jeremiah Jackson NCDPI
 	
 	Revision History:
-	09/10/2024		Initial creation of this template
+	08/16/2024		Initial creation of this template
 
 */
 
@@ -15,8 +15,6 @@
 select 
 
     s.sectionid as 'sourceId',
-    'active' as 'status',
-    s.modifiedDate as 'dateLastModified',
     concat(c.number, ' ', s.number, ' ', c.name) AS 'title',
     '' AS 'grades',
     c.courseId AS 'courseSourceId',
@@ -28,8 +26,6 @@ select
     r.Name AS 'location',
     sch.schoolGUID AS 'schoolSourceId',
     sp.termID AS 'termSourceIds',
-    '' AS 'subjects',
-    '' AS 'subjectCodes',
     CONCAT(t.name,'-',ps.name, '-',p.name) AS 'periods'
     
     
