@@ -11,6 +11,7 @@
 	
 	Revision History:
 	08/20/2024		Initial creation of this template
+	09/13/2024		Added Fake DOB for staff
 
 */
 
@@ -34,7 +35,7 @@ SELECT DISTINCT
 	 '' AS 'Staff_Parent/Guardian1_Last_Name',
 	 '' AS 'Staff_Parent/Guardian2_First_Name',
 	 '' AS 'Staff_Parent/Guardian2_Last_Name',
-	 '' AS 'Staff_DOB',  -- I am not including this.  I see no reason to share staff birthdate with a vendor
+	 '1/1/2000' AS 'Staff_DOB',  --Fake DOB for staff 
 	 '' AS 'Reserved-2',
      c.email as 'Staff_Email',
 	 '' AS 'Reserved-3',
