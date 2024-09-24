@@ -19,7 +19,7 @@ SELECT
 	c.firstName AS 'First Name',
 	CASE
 		WHEN ferpa.directoryquestion = 'NO' THEN 'YES'
-		ELSE 'NO'
+		ELSE ''
 	END AS 'Hidden from Directory',
 	stu.stateid AS 'Student ID',
 	c.relationship AS 'Title',
@@ -38,6 +38,12 @@ SELECT
 FROM v_CensusContactSummary c
 	INNER JOIN student stu ON c.personid = stu.personid
 	INNER JOIN school sch ON stu.schoolid = sch.schoolid
-  LEFT OUTER JOIN ferpa ON ferpa.personid = stu.personid
+        INNER JOIN calendar cal ON cal.calendarid = stu.calendarid
+        LEFT OUTER JOIN ferpa ON ferpa.personid = stu.personid
 WHERE c.guardian = '1'
-  AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date      
+        AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
+        AND (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
+        AND stu.stateid IS NOT NULL
+        AND cal.calendarId=stu.calendarId
+        AND sch.schoolID=cal.SchoolID
+        AND cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
