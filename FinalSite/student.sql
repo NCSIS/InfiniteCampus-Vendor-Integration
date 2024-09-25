@@ -8,6 +8,7 @@
 	
 	Revision History:
 	09/24/2024		Initial creation of this template
+	09/25/2024		Changes BusID to BusNumber
 
 */
 
@@ -60,8 +61,8 @@ SELECT DISTINCT
     cc.pager,
     Enrollment.language,
     cc.homePrimaryLanguage,
-    TransAM.BusID AS 'AMBusNumber',
-    TransPM.BusID AS 'PMBusNumber'
+    TransBusAM.number AS 'AMBusNumber',
+    TransBusPM.number AS 'PMBusNumber'
 FROM
     student stu
     JOIN Enrollment ON stu.personID = Enrollment.personID
@@ -71,6 +72,8 @@ FROM
     LEFT OUTER JOIN ContactCombined cc ON cc.personid = stu.personID AND cc.rowNumber = '1'
     LEFT JOIN TransportationRoute TransAM ON TransAM.personid = stu.personID AND TransAM.routeTypeCode = 'AM'
     LEFT JOIN TransportationRoute TransPM ON TransPM.personid = stu.personID AND TransPM.routeTypeCode = 'PM'
+    LEFT JOIN TransportationBus TransBusAM ON TransAM.busid = TransbusAM.busid
+    LEFT JOIN TransportationBus TransBusPM ON TransPM.busid = TransbusPM.busid
     LEFT JOIN ferpa ON ferpa.personid = stu.personid
 
 WHERE calendar.calendarId=stu.calendarId
