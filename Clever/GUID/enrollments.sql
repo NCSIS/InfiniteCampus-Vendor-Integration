@@ -16,6 +16,6 @@ select
 
 
 from V_OneRosterStudentEnrollment e
-INNER JOIN v_OneRosterSchool sch ON sch.SchoolID = e.schoolID
+INNER JOIN School sch ON sch.SchoolID = e.schoolID
 INNER JOIN student stu ON stu.personID = e.personid
 WHERE (e.endDate IS NULL or e.endDate>=GETDATE()) 
