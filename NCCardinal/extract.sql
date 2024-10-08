@@ -65,8 +65,7 @@ SELECT
      cs.email AS 'Email address',
      cs.householdphone AS 'Phone number',
      stu.gender AS 'Gender',
-     sch.name AS 'School',
-     ferpa.directoryquestion
+     sch.name AS 'School'
 
 FROM v_adhocstudent stu
    INNER JOIN Calendar cal ON stu.calendarID = cal.calendarID
