@@ -8,6 +8,7 @@
 	
 	Revision History:
 	08/16/2024		Initial creation of this template
+	10/10/2024		Fixed the EndDate filter to include future end dates.
 
 */
 
@@ -23,6 +24,6 @@ SELECT DISTINCT
 
 FROM staffmember sm 
    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
-WHERE sm.enddate IS NULL AND c.email LIKE '%@haywood.k12.nc.us'
+WHERE c.email LIKE '%@haywood.k12.nc.us'
    AND (sm.endDate IS NULL OR sm.enddate > getdate())
 --   AND sm.teacher = '1'
