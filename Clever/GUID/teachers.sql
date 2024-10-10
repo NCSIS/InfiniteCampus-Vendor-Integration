@@ -8,6 +8,7 @@
 	
 	Revision History:
 	08/16/2024		Initial creation of this template
+	10/10/2024		Fixed enddate filter to include future enddates.
 
 */
 
@@ -25,6 +26,6 @@ FROM staffmember sm
    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
    INNER JOIN school sch ON sm.schoolnumber = sch.number
    INNER JOIN "identity" ident ON ident.personID = sm.personid
-WHERE sm.enddate IS NULL AND c.email LIKE '%@haywood.k12.nc.us'
+WHERE c.email LIKE '%@haywood.k12.nc.us'
    AND (sm.endDate IS NULL OR sm.enddate > getdate())
 --   AND sm.teacher = '1'
