@@ -16,6 +16,7 @@
  	08/20/2024		Filter out Cross Enrolled Schools,  Inactive/Active based on Student End Date, Include inactive students in the sync
 	08/22/2024		Fixed some duplicate and filter issues
         08/28/2024              Optimized the code to use less CPU -  Removed the NOLOCK, Removed the dedundant DISTINCT, USED a single ContactsOrdered
+        10/15/2024		Fixed duplicates by filtering student enddate
 
 */
 
@@ -135,5 +136,6 @@ FROM v_AdHocStudent s
 WHERE s.calendarId = cal.calendarid
     AND cal.startDate <= GETDATE() AND cal.endDate >= GETDATE()
     AND (CAST(SUBSTRING(sch.number, 4, 3) AS INTEGER) >= 300 OR SUBSTRING(sch.number, 4, 3) = '000')
+    AND (s.endDate IS NULL or s.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
     AND s.servicetype = 'P'
     AND (s.stateid IS NOT NULL OR s.stateid <> '')
