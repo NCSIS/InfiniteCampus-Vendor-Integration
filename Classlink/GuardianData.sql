@@ -9,11 +9,13 @@ WITH ContactsGrouped AS (
 		cg.homePhone,
 		cg.householdPhone,
 		cg.email,
-		cg.relationship
+		cg.relationship,
+                cg.relatedby
 	FROM 
 		v_CensusContactSummary cg WITH (NOLOCK)
 	WHERE 
 		cg.guardian = '1' -- Filter guardians early to reduce data volume
+                AND cg.relatedby = 'relationship'
 ),
 
 GuardianData AS (
@@ -24,14 +26,30 @@ GuardianData AS (
 		ContactsGrouped cg1
 	GROUP BY 
 		cg1.contactPersonID
+),
+
+GuardianOrgs AS (
+    SELECT
+     cg2.contactpersonID,
+     STRING_AGG(CONVERT(VARCHAR(36), sch.schoolGUID), ',') AS studentorgs 
+FROM ContactsGrouped cg2
+
+INNER JOIN student stu on stu.personid = cg2.personid
+INNER JOIN school sch on sch.schoolid = stu.schoolid
+WHERE stu.activeyear = '1'
+AND cg2.relatedby = 'relationship'
+GROUP BY cg2.contactpersonid
 )
+
+
+
 
 SELECT
 	CONCAT('g', cg.contactPersonID) AS sourcedId,
 	'' AS status,
 	'' AS dateLastModified,
 	'TRUE' AS enabledUser,
-	'' AS orgSourcedIds,
+	CONCAT('"', go.studentorgs, '"') AS orgSourcedIds,
 	'guardian' AS role,
 	CONCAT('g', cg.contactPersonID) AS username,
 	CONCAT('{Fed:g', cg.contactPersonID, '}') AS userIds,
@@ -48,6 +66,7 @@ SELECT
 	cg.relationship AS relation
 FROM ContactsGrouped cg
 INNER JOIN GuardianData gd ON gd.contactPersonID = cg.contactPersonID
+INNER JOIN GuardianOrgs go ON go.contactpersonid = cg.contactpersonid
 INNER JOIN student stu ON stu.personID = cg.personID
 INNER JOIN school sch ON stu.schoolID = sch.schoolID
 INNER JOIN calendar cal ON cal.calendarID = stu.calendarID
