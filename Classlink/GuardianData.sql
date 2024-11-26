@@ -1,55 +1,61 @@
 WITH ContactsGrouped AS (
-	SELECT DISTINCT
-		cg.personID, 
-		cg.contactPersonID, 
-		cg.guardian,
-		cg.firstName,
-		cg.lastName,
-		cg.cellPhone,
-		cg.homePhone,
-		cg.householdPhone,
-		cg.email,
-		cg.relationship,
-                cg.relatedby
-	FROM 
-		v_CensusContactSummary cg WITH (NOLOCK)
-	WHERE 
-		cg.guardian = '1' -- Filter guardians early to reduce data volume
-                AND cg.relatedby = 'relationship'
+    SELECT DISTINCT
+        cg.personID, 
+        cg.contactPersonID, 
+        cg.guardian,
+        cg.firstName,
+        cg.lastName,
+        cg.cellPhone,
+        cg.homePhone,
+        cg.householdPhone,
+        cg.email,
+        cg.relationship,
+        cg.relatedby,
+    ROW_NUMBER() OVER (PARTITION BY cg.contactpersonid, cg.personid ORDER BY cg.contactPersonID DESC) AS rowNumber
+    FROM 
+        v_CensusContactSummary cg WITH (NOLOCK)
+    WHERE 
+        cg.guardian = '1' -- Filter guardians early to reduce data volume
 ),
 
-GuardianData AS (
-	SELECT
-		cg1.contactPersonID,
-		STRING_AGG(CONCAT('s', cg1.PersonID), ',') AS studentIds
-	FROM 
-		ContactsGrouped cg1
-	GROUP BY 
-		cg1.contactPersonID
-),
-
-GuardianOrgs AS (
+StudentData AS (
     SELECT
-     cg2.contactpersonID,
-     STRING_AGG(CONVERT(VARCHAR(36), sch.schoolGUID), ',') AS studentorgs 
-FROM ContactsGrouped cg2
+    cg1.contactpersonid,
+STRING_AGG(CONCAT('s', cg1.PersonID), ',') AS studentIds
+FROM contactsgrouped cg1
+where cg1.rownumber = 1
+Group by cg1.contactpersonid
+),
 
-INNER JOIN student stu on stu.personid = cg2.personid
-INNER JOIN school sch on sch.schoolid = stu.schoolid
-WHERE stu.activeyear = '1'
-AND cg2.relatedby = 'relationship'
-GROUP BY cg2.contactpersonid
-)
-
-
-
-
+OrgData AS (
 SELECT
+cg2.contactpersonid,
+STRING_AGG(CONVERT(VARCHAR(36), sch.schoolGUID), ',') as orgids
+FROM contactsgrouped cg2
+INNER JOIN student stu ON cg2.personid = stu.personid
+INNER JOIN school sch ON sch.schoolid = stu.schoolid
+INNER JOIN calendar cal ON cal.calendarid = stu.calendarid
+where cg2.rownumber = 1
+	AND cal.startDate <= GETDATE() 	
+	AND cal.endDate >= GETDATE() -- Filter current academic year
+	AND (stu.endDate IS NULL OR stu.endDate >= GETDATE()) -- Include active students
+	AND (
+		CAST(SUBSTRING(sch.number, 4, 3) AS INTEGER) >= 300 
+		OR SUBSTRING(sch.number, 4, 3) = '000'
+	) -- Filter schools based on number
+	AND stu.stateID IS NOT NULL -- Exclude students without a state ID
+group by cg2.contactpersonid
+),
+
+
+
+FinishedData AS (
+Select 
 	CONCAT('g', cg.contactPersonID) AS sourcedId,
 	'' AS status,
 	'' AS dateLastModified,
 	'TRUE' AS enabledUser,
-	CONCAT('"', go.studentorgs, '"') AS orgSourcedIds,
+	CONCAT('"', od.orgids, '"') AS orgSourcedIds,
 	'guardian' AS role,
 	CONCAT('g', cg.contactPersonID) AS username,
 	CONCAT('{Fed:g', cg.contactPersonID, '}') AS userIds,
@@ -60,22 +66,28 @@ SELECT
 	COALESCE(cg.email, '') AS email, -- Ensure no NULL values for email
 	cg.cellPhone AS sms,
 	COALESCE(cg.cellPhone, cg.homePhone, cg.householdPhone) AS phone,
-	gd.studentIds AS agentSourceIds,
+	sd.studentIds AS agentSourceIds,
 	'' AS grades,
 	'' AS password,
-	cg.relationship AS relation
-FROM ContactsGrouped cg
-INNER JOIN GuardianData gd ON gd.contactPersonID = cg.contactPersonID
-INNER JOIN GuardianOrgs go ON go.contactpersonid = cg.contactpersonid
-INNER JOIN student stu ON stu.personID = cg.personID
-INNER JOIN school sch ON stu.schoolID = sch.schoolID
-INNER JOIN calendar cal ON cal.calendarID = stu.calendarID
-WHERE 	
-	cal.startDate <= GETDATE() 	
+	cg.relationship AS relation,
+        ROW_NUMBER() OVER (PARTITION BY cg.contactpersonid ORDER BY cg.contactPersonID DESC) AS rowNumber
+from ContactsGrouped cg
+INNER JOIN studentdata sd ON cg.contactpersonid = sd.contactpersonid
+INNER JOIN orgdata od ON od.contactpersonid = cg.contactpersonid
+INNER JOIN student stu on cg.personid = stu.personid
+INNER JOIN calendar cal on stu.calendarid = cal.calendarid
+INNER JOIN school sch on stu.schoolid = sch.schoolid
+where cg.rownumber = 1
+	AND cal.startDate <= GETDATE() 	
 	AND cal.endDate >= GETDATE() -- Filter current academic year
 	AND (stu.endDate IS NULL OR stu.endDate >= GETDATE()) -- Include active students
 	AND (
 		CAST(SUBSTRING(sch.number, 4, 3) AS INTEGER) >= 300 
 		OR SUBSTRING(sch.number, 4, 3) = '000'
 	) -- Filter schools based on number
-	AND stu.stateID IS NOT NULL; -- Exclude students without a state ID
+	AND stu.stateID IS NOT NULL -- Exclude students without a state ID
+)
+
+select * 
+FROM FinishedData fd
+WHERE fd.rownumber = 1
