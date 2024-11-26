@@ -14,8 +14,10 @@ WITH ContactsGrouped AS (
     ROW_NUMBER() OVER (PARTITION BY cg.contactpersonid, cg.personid ORDER BY cg.contactPersonID DESC) AS rowNumber
     FROM 
         v_CensusContactSummary cg WITH (NOLOCK)
+INNER JOIN student stu ON cg.personid = stu.personid
     WHERE 
         cg.guardian = '1' -- Filter guardians early to reduce data volume
+     AND (stu.endDate IS NULL OR stu.endDate >= GETDATE()) -- Include active students
 ),
 
 StudentData AS (
