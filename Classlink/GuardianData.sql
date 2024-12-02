@@ -57,7 +57,7 @@ Select
 	'' AS status,
 	'' AS dateLastModified,
 	'TRUE' AS enabledUser,
-	CONCAT('"', od.orgids, '"') AS orgSourcedIds,
+	od.orgids AS orgSourcedIds,
 	'guardian' AS role,
 	CONCAT('g', cg.contactPersonID) AS username,
 	CONCAT('{Fed:g', cg.contactPersonID, '}') AS userIds,
