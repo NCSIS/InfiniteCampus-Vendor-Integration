@@ -12,11 +12,12 @@
 	08/17/2024		Changed SQL to allow for missing data and contacts by Emergency Contact #
 	08/17/2024 		Filtered Mother/Father/Guardian to be in the correct fields.  Must have guardian checked in NCSIS
 	08/17/2024		Changed over to the calendar based method of filtering and added contact de-duplication
-        08/18/2024		Change HH phone to student contact, and removed the joins for householdmember and household to fix duplicates
+	08/18/2024		Change HH phone to student contact, and removed the joins for householdmember and household to fix duplicates
  	08/20/2024		Filter out Cross Enrolled Schools,  Inactive/Active based on Student End Date, Include inactive students in the sync
 	08/22/2024		Fixed some duplicate and filter issues
-        08/28/2024              Optimized the code to use less CPU -  Removed the NOLOCK, Removed the dedundant DISTINCT, USED a single ContactsOrdered
-        10/15/2024		Fixed duplicates by filtering student enddate
+	08/28/2024		Optimized the code to use less CPU -  Removed the NOLOCK, Removed the dedundant DISTINCT, USED a single ContactsOrdered
+	10/15/2024		Fixed duplicates by filtering student enddate
+	12/03/2024		Changed Address to use Household Addresses
 
 */
 
@@ -80,6 +81,33 @@ ContactSelf AS (
 	FROM 
 		v_CensusContactSummary c 
 	WHERE c.relationship = 'Self'
+),
+
+StudentHouse AS (
+SELECT
+	stu.personid, 
+	CONCAT(addr.number, ' ',addr.street, ' ',addr.tag) AS streetaddress,
+	addr.apt,
+	addr.city,
+	addr.state,
+	addr.zip,
+	ROW_NUMBER() OVER (PARTITION BY stu.personID ORDER BY stu.personid) AS rowNumber
+FROM student stu
+INNER JOIN school sch ON stu.schoolid = sch.schoolid
+INNER JOIN calendar cal ON stu.calendarID = cal.calendarID
+LEFT OUTER JOIN householdmember hm ON stu.personid = hm.personid and hm.secondary = 0
+INNER JOIN householdlocation hl ON hl.householdid = hm.householdID and hl.secondary = 0 and hl.private = 0 
+INNER JOIN address addr ON addr.addressID = hl.addressID AND addr.postOfficeBox = 0
+WHERE 	
+	cal.startDate <= GETDATE()
+	AND cal.endDate >= GETDATE()
+    AND (hl.endDate IS NULL OR hl.endDate >= GETDATE()) -- Filter out addresses that have ended
+	AND (stu.endDate IS NULL OR stu.endDate >= GETDATE()) -- Include active students
+	AND (
+		CAST(SUBSTRING(sch.number, 4, 3) AS INTEGER) >= 300 
+		OR SUBSTRING(sch.number, 4, 3) = '000'
+	) -- Filter schools based on number
+	AND stu.stateID IS NOT NULL -- Exclude students without a state ID
 )
 
 SELECT 
@@ -99,12 +127,12 @@ SELECT
 	sch.name AS 'School Name',
 	SUBSTRING(sch.number, 4, LEN(sch.number) - 3) AS 'School Number',
 	s.homeroomTeacher AS 'Homeroom',
-	c1.addressLine1 AS 'Mailing Address',
+	sh.streetaddress AS 'Mailing Address',
 	'' AS 'Mailing Apt',
 	'' AS 'Mailing PO Box',
-	c1.city AS 'Mailing City',
-	c1.state AS 'Mailing State',
-	c1.zip AS 'Mailing ZipCode',
+	sh.city AS 'Mailing City',
+	sh.state AS 'Mailing State',
+	sh.zip AS 'Mailing ZipCode',
 	'' AS 'Address',
 	'' AS 'APT',
 	'' AS 'City',
@@ -132,6 +160,7 @@ FROM v_AdHocStudent s
 	INNER JOIN ContactSelf cs ON s.personID = cs.personID AND cs.rowNumber = 1
 	INNER JOIN school sch ON sch.schoolid = s.schoolID
 	INNER JOIN Calendar cal ON s.calendarID = cal.calendarID
+	LEFT OUTER JOIN StudentHouse sh ON sh.personid = s.personid AND sh.rownumber = 1
 
 WHERE s.calendarId = cal.calendarid
     AND cal.startDate <= GETDATE() AND cal.endDate >= GETDATE()
