@@ -61,8 +61,8 @@ Select
 	'guardian' AS role,
 	CONCAT('g', cg.contactPersonID) AS username,
 	CONCAT('{Fed:g', cg.contactPersonID, '}') AS userIds,
-	cg.lastName AS lastName,
-	cg.firstName AS firstName,
+	cg.lastName AS familyName,
+	cg.firstName AS givenName,
 	'' AS middleName,
 	CONCAT('g', cg.contactPersonID) AS identifier,
 	COALESCE(cg.email, '') AS email, -- Ensure no NULL values for email
