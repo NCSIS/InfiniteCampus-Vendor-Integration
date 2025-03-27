@@ -193,4 +193,4 @@ WHERE s.calendarId = cal.calendarid
     AND s.servicetype = 'P'
     AND (s.stateid IS NOT NULL OR s.stateid <> '')
 -- Comment out the line  below to add inactive students to the file and mark their status as 'I' by adding --
-    AND (s.endDate IS NULL or s.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
+--    AND (s.endDate IS NULL or s.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
