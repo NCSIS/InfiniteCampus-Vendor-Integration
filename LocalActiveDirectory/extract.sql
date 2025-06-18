@@ -140,24 +140,27 @@ SELECT
 		ELSE s.grade  
 	END AS 'STUDENTS.Grade_Level',  
 
-CASE
-      WHEN s.grade = '13' THEN '2025'
-      WHEN s.grade = 'OS' THEN '2025'
-      WHEN s.grade = '12' THEN '2025'
-      WHEN s.grade = '11' THEN '2026'
-      WHEN s.grade = '10' THEN '2027'
-      WHEN s.grade = '9' THEN '2028'
-      WHEN s.grade = '8' THEN '2029'
-      WHEN s.grade = '7' THEN '2030'
-      WHEN s.grade = '6' THEN '2031'
-      WHEN s.grade = '5' THEN '2032'
-      WHEN s.grade = '4' THEN '2033'
-      WHEN s.grade = '3' THEN '2034'
-      WHEN s.grade = '2' THEN '2035'
-      WHEN s.grade = '1' THEN '2036'
-      WHEN s.grade = 'KG' THEN '2037'
-      ELSE '2037'
-  END AS 'STUDENTS.ClassOf',
+-- Convert Grade to Graduation Year
+	CASE
+      WHEN s.grade = '13' THEN CONVERT(numeric,cal.endyear)
+      WHEN s.grade = 'OS' THEN Convert(numeric,cal.endyear)
+      WHEN s.grade = '12' THEN Convert(numeric,cal.endyear)
+      WHEN s.grade = '11' THEN (Convert(numeric,cal.endyear)+1)
+      WHEN s.grade = '10' THEN (Convert(numeric,cal.endyear)+2)
+      WHEN s.grade = '9' THEN (Convert(numeric,cal.endyear)+3)
+      WHEN s.grade = '8' THEN (Convert(numeric,cal.endyear)+4)
+      WHEN s.grade = '7' THEN (Convert(numeric,cal.endyear)+5)
+      WHEN s.grade = '6' THEN (Convert(numeric,cal.endyear)+6)
+      WHEN s.grade = '5' THEN (Convert(numeric,cal.endyear)+7)
+      WHEN s.grade = '4' THEN (Convert(numeric,cal.endyear)+8)
+      WHEN s.grade = '3' THEN (Convert(numeric,cal.endyear)+9)
+      WHEN s.grade = '2' THEN (Convert(numeric,cal.endyear)+10)
+      WHEN s.grade = '1' THEN (Convert(numeric,cal.endyear)+11)
+      WHEN s.grade = 'KG' THEN (Convert(numeric,cal.endyear)+12)
+      WHEN s.grade = 'PK' THEN (Convert(numeric,cal.endyear)+13)
+      WHEN s.grade = 'PR' THEN (Convert(numeric,cal.endyear)+14)
+	  WHEN s.grade = 'IT' THEN (Convert(numeric,cal.endyear)+15)
+	END AS GradYear,
 
 -- Change Birthday Format into MM/DD/YYYY
 	FORMAT(s.birthdate,'MM/dd/yyyy') AS 'STUDENTS.DOB',
