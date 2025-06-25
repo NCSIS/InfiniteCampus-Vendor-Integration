@@ -30,12 +30,19 @@ Grade Passback: enabled or disabled
 Avoid creating any new data objects during the SIS Conversion.
 
 HOWTO OneRoster API (Jeremiah Jackson)
+
 Login to Infinite Campus 
+
 Click on Instruction
+
 Digital Learning Application Configuration
+
 Click the + Add Application
+
 Choose Instructure - Data Sync
+
 Click + next toe OneRoster Connections
+
 Click +Generate New OneRoster Connection
 Click Generate (OneRoster 1.2)
 
