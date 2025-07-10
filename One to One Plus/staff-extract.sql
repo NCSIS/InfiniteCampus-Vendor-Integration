@@ -2,10 +2,13 @@
 	Title: One to One Plus Staff
 	Author: Jeremiah Jackson NCDPI
 	Revision History:
-	07/10/2025		Enhanced logic to prefer active jobs but fallback to latest inactive
+	07/10/2025		Enhanced logic to prefer active teacher jobs, fallback to non-teacher if none
 
-** Reminder to change the email address in the bottom of this file to match your email domain.
+Prioritize by: Active status THEN Teacher status (sm.teacher = 1) THEN Most recent startdate
 
+*********
+********* Reminder to change the email domain below to match your domain
+*********
 */
 
 WITH RankedStaff AS (
@@ -23,9 +26,11 @@ WITH RankedStaff AS (
          ROW_NUMBER() OVER (
               PARTITION BY sm.staffstateID
               ORDER BY 
-                   -- Prefer active records first
+                   -- 1. Active first
                    CASE WHEN sm.enddate IS NULL OR sm.endDate > GETDATE() THEN 1 ELSE 2 END,
-                   -- Then prefer latest startdate
+                   -- 2. Teacher jobs first
+                   CASE WHEN sm.teacher = 1 THEN 1 ELSE 2 END,
+                   -- 3. Then latest start date
                    sm.startdate DESC
          ) AS rn
     FROM staffmember sm 
