@@ -2,9 +2,9 @@ SchooCash upload files are tab delimited and must include all the fields even if
 Instrctions can be found here:  https://drive.google.com/file/d/1AninXfxUsRe_I_D-_2rK7JU7bnKjx7LE/view?usp=sharing
 
 Filenames:
-Mass_YourDistrictName_Students.txt  - 
-Mass_YourDistrictName_Scheduling.txt -   
-Mass_YourDistrictName_Staff.txt  (optional)
+YourDistrictName_Students.txt  - 
+YourDistrictName_Scheduling.txt -   
+YourDistrictName_Staff.txt  (optional)
 
 Contact Information:
 Email: implementation@kevgroup.com (during implementation)
