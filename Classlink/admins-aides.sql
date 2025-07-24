@@ -9,13 +9,14 @@
 	
 	Revision History:
 	08/27/2024		Initial creation of this template
+        07/24.2025		added missing 'd' to sourcedids and orgsourcedids
 
 */
 
 SELECT DISTINCT
-     ident.identityGUID AS 'sourceId',
+     ident.identityGUID AS 'sourcedId',
      'true' AS 'enabledUser',
-     sch.schoolguid as 'orgSourceIds',
+     sch.schoolguid as 'orgSourcedIds',
 	CASE
 		WHEN sm.supervisor = '1' THEN 'administrator'
 		ELSE 'aide'
