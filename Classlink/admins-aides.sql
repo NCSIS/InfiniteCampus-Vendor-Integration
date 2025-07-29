@@ -9,31 +9,47 @@
 	
 	Revision History:
 	08/27/2024		Initial creation of this template
-        07/24.2025		added missing 'd' to sourcedids and orgsourcedids
+        07/24/2025		added missing 'd' to sourcedids and orgsourcedids
+        07/29/2025		Removed Dupes - Grouped by SourceDID and added all orgs as a comma delimited field for every org..
 
 */
-
-SELECT DISTINCT
-     ident.identityGUID AS 'sourcedId',
-     'true' AS 'enabledUser',
-     sch.schoolguid as 'orgSourcedIds',
-	CASE
-		WHEN sm.supervisor = '1' THEN 'administrator'
-		ELSE 'aide'
-	END AS 'role',
-	left(c.email, charindex('@', c.email) - 1) AS 'username',
-	sm.firstName as 'givenName',
-	sm.lastName as 'familyName',
---	sm.middleName as 'middleName',
-	sm.staffstateID AS 'identifier',
-	c.email AS 'email'
---	COALESCE(c.homePhone, c.cellPhone) AS 'phone'
+WITH grouped_orgs AS (
+    SELECT 
+        ident.identityGUID AS sourcedId,
+        STRING_AGG(CAST(sch.schoolguid AS NVARCHAR(36)), ',') AS orgSourcedIds
+    FROM staffmember sm
+    INNER JOIN school sch ON sm.schoolnumber = sch.number
+    INNER JOIN "identity" ident ON ident.personID = sm.personid
+    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
+    WHERE sm.enddate IS NULL 
+        AND c.email LIKE '%@haywood.k12.nc.us'
+        AND (sm.endDate IS NULL OR sm.enddate > GETDATE())
+        AND sm.teacher <> '1'
+    GROUP BY ident.identityGUID
+)
 
 
-FROM staffmember sm 
-   INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
-   INNER JOIN school sch ON sm.schoolnumber = sch.number
-   INNER JOIN "identity" ident ON ident.personID = sm.personid
-WHERE sm.enddate IS NULL AND c.email LIKE '%@haywood.k12.nc.us'
-   AND (sm.endDate IS NULL OR sm.enddate > getdate())
-   AND sm.teacher <> '1'
+SELECT 
+    go.sourcedId,
+    'true' AS enabledUser,
+    go.orgSourcedIds,
+    CASE
+        WHEN sm.supervisor = '1' THEN 'administrator'
+        ELSE 'aide'
+    END AS role,
+    LEFT(c.email, CHARINDEX('@', c.email) - 1) AS username,
+    sm.firstName AS givenName,
+    sm.lastName AS familyName,
+    sm.staffstateID AS identifier,
+    c.email AS email
+FROM grouped_orgs go
+INNER JOIN staffmember sm ON sm.personid = (
+    SELECT TOP 1 ident.personID 
+    FROM "identity" ident 
+    WHERE ident.identityGUID = go.sourcedId
+)
+INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
+WHERE sm.enddate IS NULL 
+    AND c.email LIKE '%@haywood.k12.nc.us'
+    AND (sm.endDate IS NULL OR sm.enddate > GETDATE())
+    AND sm.teacher <> '1'
