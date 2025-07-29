@@ -11,6 +11,7 @@
 	08/27/2024		Initial creation of this template
         07/24/2025		added missing 'd' to sourcedids and orgsourcedids
         07/29/2025		Removed Dupes - Grouped by SourceDID and added all orgs as a comma delimited field for every org..
+        07/29/2025		SELECT DISTINCT
 
 */
 WITH grouped_orgs AS (
@@ -29,7 +30,7 @@ WITH grouped_orgs AS (
 )
 
 
-SELECT 
+SELECT DISTINCT
     go.sourcedId,
     'true' AS enabledUser,
     go.orgSourcedIds,
