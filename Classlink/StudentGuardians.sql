@@ -21,7 +21,7 @@ GuardianData AS (
 
 SELECT
 	CONCAT('s', gd.personID) AS sourcedId,
-	CONCAT('"', gd.guardianIds, '"') AS agentSourceIds,
+	CONCAT('"', gd.guardianIds, '"') AS agentSourcedIds,
 	CASE 
 		WHEN NULLIF(stu.homeprimarylanguage, '') IS NULL THEN 'eng'
 		ELSE stu.homeprimarylanguage
