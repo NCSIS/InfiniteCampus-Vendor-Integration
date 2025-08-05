@@ -68,7 +68,7 @@ Select
 	COALESCE(cg.email, '') AS email, -- Ensure no NULL values for email
 	cg.cellPhone AS sms,
 	COALESCE(cg.cellPhone, cg.homePhone, cg.householdPhone) AS phone,
-	sd.studentIds AS agentSourceIds,
+	sd.studentIds AS agentSourcedIds,
 	'' AS grades,
 	'' AS password,
 	cg.relationship AS relation,
