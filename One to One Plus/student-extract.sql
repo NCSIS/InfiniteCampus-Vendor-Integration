@@ -6,6 +6,7 @@
 	Revision History:
 	07/25/2024		Initial creation of this template
         07/09/2025		Updated to allow enrolled students before their start date
+	08/11/2025		Fixed missing students due to contact not equal to 'Self'
 
 */
 
@@ -29,7 +30,24 @@ FROM
 v_CensusContactSummary c WITH (NOLOCK)
 WHERE
 c.guardian = 1
+),
+
+ContactSelf AS (
+	SELECT 
+		c.personID, 
+		c.cellphone,
+		c.householdPhone, 
+		c.seq,
+		c.relationship,
+		c.email,
+		ROW_NUMBER() OVER (PARTITION BY c.personID ORDER BY c.seq) AS rowNumber
+	FROM 
+		v_CensusContactSummary c 
+	WHERE c.relationship = 'Self'
 )
+
+
+
 SELECT
 s.firstName AS 'first_name',
 s.lastName AS 'last_name',
@@ -64,7 +82,7 @@ FROM v_AdHocStudent s
 LEFT OUTER JOIN ContactsOrdered c1 ON s.personID = c1.personID AND c1.rowNumber = 1
 LEFT OUTER JOIN ContactsOrdered c2 ON s.personID = c2.personID AND c2.rowNumber = 2
 JOIN school sch ON sch.schoolid = s.schoolID
-JOIN contact c ON c.personID = s.personID
+JOIN contactself c ON c.personID = s.personID  and c.rowNumber = 1
 JOIN calendar cal ON cal.calendarID = s.calendarId
 
 WHERE s.calendarId = cal.calendarid
