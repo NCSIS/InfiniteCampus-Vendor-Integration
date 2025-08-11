@@ -7,45 +7,10 @@
 	
 	Revision History:
         08/10/2025 - Original
-		08/10/2025 - Fixed parent ContactsGrouped
+		08/10/2025 - Removed Duplicates
 
 */
 
-WITH ContactsGrouped AS (
-    SELECT DISTINCT
-        cg.personID, 
-        cg.contactPersonID, 
-        cg.guardian,
-        cg.firstName,
-        cg.lastName,
-        cg.cellPhone,
-        cg.homePhone,
-        cg.householdPhone,
-        cg.email,
-        cg.relationship,
-        cg.relatedby,
-    ROW_NUMBER() OVER (PARTITION BY cg.contactpersonid, cg.personid ORDER BY cg.contactPersonID DESC) AS rowNumber
-    FROM 
-        v_CensusContactSummary cg WITH (NOLOCK)
-INNER JOIN student stu ON cg.personid = stu.personid
-    WHERE 
-        cg.guardian = '1' -- Filter guardians early to reduce data volume
-     AND (stu.endDate IS NULL OR stu.endDate >= GETDATE()) -- Include active students
-),
-
-ContactSelf AS (
-	SELECT 
-		c.personID, 
-		c.cellphone,
-		c.householdPhone, 
-		c.seq,
-		c.relationship,
-		c.email,
-		ROW_NUMBER() OVER (PARTITION BY c.personID ORDER BY c.seq) AS rowNumber
-	FROM 
-		v_CensusContactSummary c 
-	WHERE c.relationship = 'Self'
-)
 
 
 
@@ -71,8 +36,21 @@ FROM
     v_adhocstudent stu
     JOIN Calendar cal ON cal.calendarID = stu.calendarID
     JOIN School sch ON sch.schoolID = cal.schoolID
-    LEFT JOIN ContactSelf cs ON stu.personID = cs.personID AND cs.rowNumber = 1
-    LEFT OUTER JOIN ContactsGrouped cg1 ON cg1.personid = stu.personID AND cg1.rowNumber = '1'
+
+OUTER APPLY (
+    SELECT TOP 1 c.*
+    FROM v_CensusContactSummary c
+    WHERE c.personID = stu.personID
+      AND c.relationship = 'Self'
+    ORDER BY c.seq
+) cs
+OUTER APPLY (
+    SELECT TOP 1 cg.*
+    FROM v_CensusContactSummary cg
+    WHERE cg.personID = stu.personID
+      AND cg.guardian = '1'
+    ORDER BY cg.contactPersonID DESC
+) cg1
 
 
 WHERE cal.calendarId=stu.calendarId
