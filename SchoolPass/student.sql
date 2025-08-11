@@ -7,23 +7,30 @@
 	
 	Revision History:
         08/10/2025 - Original
+		08/10/2025 - Fixed parent ContactsGrouped
 
 */
 
-WITH ContactCombined AS (
-    SELECT
-        c.personid, c.email, c.homephone, c.workphone, c.cellphone, c.pager, c.communicationLanguage, 
-        a.city, a.state, a.zip, a.postOfficeBox, a.number, a.street, a.tag, a.apt, 
-        hh.phone, 
-        i.homePrimaryLanguage, i.gender, i.lastName, i.firstName, i.middleName, i.birthdate,
-        ROW_NUMBER() OVER (PARTITION BY c.personid ORDER BY c.personid) AS rowNumber
-    FROM person p 
-        INNER JOIN contact c ON p.personid = c.personid
-        INNER JOIN [Identity] i ON p.currentIdentityID = i.identityID 
-        LEFT OUTER JOIN householdmember hm ON hm.personid = p.personid AND (hm.enddate IS NULL OR hm.enddate >= GETDATE()) AND hm.secondary = '0'
-        LEFT OUTER JOIN household hh ON hh.householdid = hm.householdid
-        LEFT OUTER JOIN householdlocation hl ON hl.householdid = hh.householdid AND (hl.enddate IS NULL OR hl.enddate >= GETDATE()) AND hl.secondary = '0'
-        LEFT OUTER JOIN address a ON hl.addressid = a.addressid
+WITH ContactsGrouped AS (
+    SELECT DISTINCT
+        cg.personID, 
+        cg.contactPersonID, 
+        cg.guardian,
+        cg.firstName,
+        cg.lastName,
+        cg.cellPhone,
+        cg.homePhone,
+        cg.householdPhone,
+        cg.email,
+        cg.relationship,
+        cg.relatedby,
+    ROW_NUMBER() OVER (PARTITION BY cg.contactpersonid, cg.personid ORDER BY cg.contactPersonID DESC) AS rowNumber
+    FROM 
+        v_CensusContactSummary cg WITH (NOLOCK)
+INNER JOIN student stu ON cg.personid = stu.personid
+    WHERE 
+        cg.guardian = '1' -- Filter guardians early to reduce data volume
+     AND (stu.endDate IS NULL OR stu.endDate >= GETDATE()) -- Include active students
 ),
 
 ContactSelf AS (
@@ -65,7 +72,7 @@ FROM
     JOIN Calendar cal ON cal.calendarID = stu.calendarID
     JOIN School sch ON sch.schoolID = cal.schoolID
     LEFT JOIN ContactSelf cs ON stu.personID = cs.personID AND cs.rowNumber = 1
-    LEFT OUTER JOIN ContactCombined cg1 ON cg1.personid = stu.personID AND cg1.rowNumber = '1'
+    LEFT OUTER JOIN ContactsGrouped cg1 ON cg1.personid = stu.personID AND cg1.rowNumber = '1'
 
 
 WHERE cal.calendarId=stu.calendarId
