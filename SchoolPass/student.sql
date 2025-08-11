@@ -8,6 +8,7 @@
 	Revision History:
         08/10/2025 - Original
 		08/10/2025 - Removed Duplicates
+		08/11/2025 - Sort Parents by Priority
 
 */
 
@@ -49,7 +50,7 @@ OUTER APPLY (
     FROM v_CensusContactSummary cg
     WHERE cg.personID = stu.personID
       AND cg.guardian = '1'
-    ORDER BY cg.contactPersonID DESC
+    ORDER BY cg.seq ASC
 ) cg1
 
 
