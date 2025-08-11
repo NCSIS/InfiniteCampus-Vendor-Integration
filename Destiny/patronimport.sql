@@ -9,6 +9,7 @@
 	Revision History:
 	08/16/2024		Initial creation of this template
 	08/28/2024		Made more efficient for larger school districts.
+	08/11/2025 		Outer APPLY to ensure students without a self record are included.
 
 
 */
@@ -69,7 +70,7 @@ CASE
 FROM student stu
    INNER JOIN calendar cal ON cal.calendarID = stu.calendarId
    INNER JOIN school sch ON sch.schoolID = cal.schoolID
-    CROSS APPLY (
+    OUTER APPLY (
         SELECT TOP 1 * 
         FROM v_CensusContactSummary cs 
         WHERE cs.personID = stu.personID 
