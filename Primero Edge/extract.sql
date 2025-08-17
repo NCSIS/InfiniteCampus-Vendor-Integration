@@ -85,7 +85,7 @@ SELECT
 		CASE 
 	    WHEN s.endDate IS NULL OR s.endDate >= GETDATE() THEN 'Active'
 		WHEN s.endDate < GETDATE() THEN 'Inactive'
-		ELSE 'I'
+		ELSE 'Inactive'
 	END AS 'Status'
 
 
