@@ -1,0 +1,23 @@
+/*
+	Title: Deanslist Teacher Enrollment
+	
+	Description: 
+	
+	Author: Jeremiah Jackson NCDPI
+	
+	Revision History:
+	08/17/2025		Initial creation of this template
+
+*/
+
+select 
+	sm.staffstateid AS 'UserID',
+	orcourse.coursecode AS 'CourseID',
+	orte.sectionid AS 'SectionId'
+
+FROM v_OneRosterTeacherEnrollment orte
+INNER JOIN v_OneRosterClass orclass ON orclass.sectionid = orte.sectionid
+INNER JOIN v_OneRosterCourse orcourse ON orcourse.courseid = orclass.courseid
+INNER JOIN staffmember sm ON sm.personid = orte.personid
+
+WHERE orte.[primary] = '1'
