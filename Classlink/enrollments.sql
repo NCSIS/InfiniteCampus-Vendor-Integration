@@ -10,7 +10,7 @@
 
 */
 
-select top 3
+select
     CONCAT('s',r.rosterID) AS sourcedId,
 	'active' AS status,
 	r.modifiedDate AS dateLastModified,
