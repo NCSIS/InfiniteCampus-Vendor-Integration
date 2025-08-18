@@ -12,7 +12,7 @@
 
 */
 
-select
+select DISTINCT
 	stu.stateid AS 'StudentID',
 	c.number AS 'CourseID',
 	c.name	AS 'CoursenName',
