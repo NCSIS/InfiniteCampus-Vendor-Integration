@@ -1,0 +1,26 @@
+/*
+	Title: Deanslist Grades
+	
+	Description: 
+	
+	Author: Jeremiah Jackson NCDPI
+	
+	Revision History:
+	08/17/2025		Initial creation of this template
+
+*/
+
+SELECT 
+	stu.stateid AS [StudentID],
+	grade.coursenumber AS [CourseID],
+	grade.sectionid AS [SectionID],
+	grade.termname AS [TermID],
+	grade.progressScore AS [PercentGrade]
+
+FROM student stu
+	INNER JOIN v_GradingScores grade ON grade.personid = stu.personid
+	INNER JOIN calendar cal ON grade.calendarid = cal.calendarid
+
+WHERE cal.startDate<=GETDATE() AND cal.endDate>=GETDATE() --Get only calendars for the current year
+   AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
+   AND stu.stateid IS NOT NULL
