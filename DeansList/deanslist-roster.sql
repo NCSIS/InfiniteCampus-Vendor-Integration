@@ -19,7 +19,7 @@ select
 	r.sectionid AS 'SectionID',
 	orc.title AS 'SectionName',
 	p.name AS 'Period',
-	s.termName AS 'TERM'
+	sp.termName AS 'TERM'
 	
 FROM roster r
 	INNER JOIN section s on s.sectionID = r.sectionID
