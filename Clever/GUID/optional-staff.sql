@@ -14,7 +14,7 @@
 
 SELECT DISTINCT
      sch.schoolGUID as 'School_id',
-     ident.identityGUID AS 'Staff_id',
+     person.personGUID AS 'Staff_id',
      c.email as 'Staff_email',
      sm.firstName as 'First_name',
      sm.lastname as 'Last_name',
@@ -25,7 +25,7 @@ SELECT DISTINCT
 FROM staffmember sm 
    INNER JOIN contact c ON sm.personid = c.personid AND c.email IS NOT NULL
    INNER JOIN school sch ON sch.schoolID = sm.schoolID
-   INNER JOIN "identity" ident ON ident.personid = sm.personid
+   INNER JOIN [person] person ON person.personid = sm.personid
 
 WHERE sm.enddate IS NULL AND c.email LIKE '%@haywood.k12.nc.us'
    AND (sm.endDate IS NULL OR sm.enddate > getdate())
