@@ -44,9 +44,11 @@ $excel.Quit()
 $timsdata = Import-Excel -Path $xlsxPath
   
 
-ForEach ($ID in $timsdata)
+# Build and write out the data to CSV
+########################
+$newcsv = ForEach ($ID in $timsdata)
 {
-$cleanID = [decimal]$ID.stu_districtid
+    $cleanID = [decimal]$ID.stu_districtid
     switch ($ID.stutrip_ztriptype_id) {
         1 { $mappedValue = 'To' }
         2 { $mappedValue = 'From' }
@@ -55,16 +57,16 @@ $cleanID = [decimal]$ID.stu_districtid
         default { $mappedValue = $ID.stutrip_ztriptype_id }
     }
 
-if ($ID.rte_id) {
-
-	$newcsv = New-Object psobject
-			$newcsv | Add-Member -MemberType NoteProperty -name StudentStateID -Value $cleanID
-			$newcsv | Add-Member -MemberType NoteProperty -name RouteName -Value $ID."run_desc"
-			$newcsv | Add-Member -MemberType NoteProperty -name RouteTypeCode -Value $mappedValue
-			$newcsv | Add-Member -MemberType NoteProperty -name BusNumber -Value $ID.rte_id
-			$newcsv | Add-Member -MemberType NoteProperty -name StopDescription -Value $ID."stop_desc"
-			$newcsv | Add-Member -MemberType NoteProperty -name StopTime -Value $ID."runsrv_timeatsrv"
-			$newcsv | Add-Member -MemberType NoteProperty -name SchoolDist -Value $ID."stu_schdist_geo"
-			$newcsv | export-csv $timsCSV -notypeinformation -append
-			}
+    if ($ID.runrte_rte_id) {
+        [pscustomobject]@{
+            'StudentStateID' = $cleanID
+            'RouteName' = $ID.run_desc
+            'RouteTypeCode' = $mappedValue
+            'BusNumber' = $ID.runrte_rte_id
+            'StopDescription' = $ID.stop_desc
+            'StopTime' = $ID.runsrv_timeatsrv
+            'SchoolDist' = $ID.stu_schdist_geo
+        }
+	}
 }
+$newcsv | Export-Csv -NoTypeInformation -Path $timsCSV
