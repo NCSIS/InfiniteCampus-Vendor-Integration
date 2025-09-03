@@ -8,12 +8,13 @@
 	
 	Revision History:
 	09/03/2025		Initial creation of this template
+	09/03/2025		Changed STUDENTID to UID
 
 
 */
 
 SELECT
-	stu.personid AS [StudentID],
+	stu.stateid AS [StudentID],
 	stu.firstName AS [FirstName],
 	stu.lastName AS [Last Name],
 	stu.gender AS [Gender],
