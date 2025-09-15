@@ -20,6 +20,7 @@
 	12/03/2024		Changed Address to use Household Addresses
 	03/25/2025		Changed to Allow Inactive Students (Just comment out the last line at the bottom of the file s.enddate with a --
 					EX: --   AND (s.endDate IS NULL or s.endDate>=GETDATE())
+	09/15/2025		Changed Date Format for birthdate (yyyyMMdd) and removed extraneous characters in Homeroom
 
 */
 
@@ -138,7 +139,7 @@ SELECT
 	'' AS 'SSN',
 	s.lastName AS 'Last Name',
 	s.firstName AS 'First Name', 
-	FORMAT(s.birthdate,'MM/dd/yyyy') AS 'Birth Date',
+	FORMAT(s.birthdate,'yyyyMMdd') AS 'Birth Date',
 	'' AS 'Entry Date',
 	CASE 
 	    WHEN s.endDate IS NULL OR s.endDate >= GETDATE() THEN 'A'
@@ -149,7 +150,11 @@ SELECT
 	s.grade AS 'Grade',
 	sch.name AS 'School Name',
 	SUBSTRING(sch.number, 4, LEN(sch.number) - 3) AS 'School Number',
-	s.homeroomTeacher AS 'Homeroom',
+--	s.homeroomTeacher AS 'Homeroom',
+	CASE
+        WHEN CHARINDEX('(', s.homeroomTeacher) > 0 THEN LEFT(s.homeroomTeacher, CHARINDEX('(', s.homeroomTeacher) - 1)
+        ELSE s.homeroomTeacher
+    END AS  'Homeroom', 
 	sh.streetaddress AS 'Mailing Address',
 	'' AS 'Mailing Apt',
 	'' AS 'Mailing PO Box',
