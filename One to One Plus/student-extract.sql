@@ -82,7 +82,7 @@ FROM v_AdHocStudent s
 LEFT OUTER JOIN ContactsOrdered c1 ON s.personID = c1.personID AND c1.rowNumber = 1
 LEFT OUTER JOIN ContactsOrdered c2 ON s.personID = c2.personID AND c2.rowNumber = 2
 JOIN school sch ON sch.schoolid = s.schoolID
-JOIN contactself c ON c.personID = s.personID  and c.rowNumber = 1
+LEFT OUTER JOIN contactself c ON c.personID = s.personID  and c.rowNumber = 1
 JOIN calendar cal ON cal.calendarID = s.calendarId
 
 WHERE s.calendarId = cal.calendarid
