@@ -7,6 +7,7 @@
 	07/25/2024		Initial creation of this template
         07/09/2025		Updated to allow enrolled students before their start date
 	08/11/2025		Fixed missing students due to contact not equal to 'Self'
+    09/16/2025 		Modified the Join to allow students without a contact = 'self'
 
 */
 
