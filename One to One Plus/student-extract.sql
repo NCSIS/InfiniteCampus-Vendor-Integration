@@ -8,6 +8,9 @@
         07/09/2025		Updated to allow enrolled students before their start date
 	08/11/2025		Fixed missing students due to contact not equal to 'Self'
     09/16/2025 		Modified the Join to allow students without a contact = 'self'
+					This will result in a few students without an email address
+					If you notice a student without an email.  Goto Census->Relationships
+					Look for a student who is a 'Sibling' of themselves.  Click the X to remove that relationship.
 
 */
 
