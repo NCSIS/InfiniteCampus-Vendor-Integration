@@ -142,7 +142,7 @@ WHERE
 	AND stu.stateID IS NOT NULL -- Exclude students without a state ID
 )
 
-SELECT TOP 100
+SELECT
 	s.stateid AS 'NCWISE_ID', 
 	'' AS 'SSN',
 	cs.lastName AS 'Last Name',
@@ -200,4 +200,5 @@ FROM person s
 WHERE le.calendarId = cal.calendarid
     AND cal.startDate <= GETDATE() AND cal.endDate >= GETDATE()
     AND (CAST(SUBSTRING(sch.number, 4, 3) AS INTEGER) >= 300 OR SUBSTRING(sch.number, 4, 3) = '000')
+
     AND (s.stateid IS NOT NULL OR s.stateid <> '')
