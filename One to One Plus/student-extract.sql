@@ -7,6 +7,10 @@
 	07/25/2024		Initial creation of this template
         07/09/2025		Updated to allow enrolled students before their start date
 	08/11/2025		Fixed missing students due to contact not equal to 'Self'
+    09/16/2025 		Modified the Join to allow students without a contact = 'self'
+					This will result in a few students without an email address
+					If you notice a student without an email.  Goto Census->Relationships
+					Look for a student who is a 'Sibling' of themselves.  Click the X to remove that relationship.
 
 */
 
@@ -82,7 +86,7 @@ FROM v_AdHocStudent s
 LEFT OUTER JOIN ContactsOrdered c1 ON s.personID = c1.personID AND c1.rowNumber = 1
 LEFT OUTER JOIN ContactsOrdered c2 ON s.personID = c2.personID AND c2.rowNumber = 2
 JOIN school sch ON sch.schoolid = s.schoolID
-JOIN contactself c ON c.personID = s.personID  and c.rowNumber = 1
+LEFT OUTER JOIN contactself c ON c.personID = s.personID  and c.rowNumber = 1
 JOIN calendar cal ON cal.calendarID = s.calendarId
 
 WHERE s.calendarId = cal.calendarid
