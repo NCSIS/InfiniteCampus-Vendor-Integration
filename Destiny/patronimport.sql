@@ -10,6 +10,7 @@
 	08/16/2024		Initial creation of this template
 	08/28/2024		Made more efficient for larger school districts.
 	08/11/2025 		Outer APPLY to ensure students without a self record are included.
+    10/7/2025 		Changed setting to only pull Primary School for Students
 
 
 */
@@ -85,6 +86,7 @@ WHERE cal.calendarId=stu.calendarId
    AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
    AND (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
    AND stu.stateid IS NOT NULL
+   AND stu.servicetype = 'P'
 
    
    
