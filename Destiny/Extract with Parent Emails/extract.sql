@@ -127,3 +127,4 @@ WHERE cal.calendarId=stu.calendarId
    AND (stu.endDate IS NULL or stu.endDate>=GETDATE()) --Get students with no end-date or future-dated end date
    AND (CAST(substring(sch.number,4,3) AS INTEGER) >= 300 or substring(sch.number,4,3) = '000')
    AND stu.stateid IS NOT NULL
+   AND stu.servicetype = 'P'
