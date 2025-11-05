@@ -30,7 +30,7 @@ ContactsOrdered AS (
 		co.personID, co.contactPersonID, co.lastName, co.firstName, co.email, co.homePhone, co.cellPhone, co.seq, co.relationship, co.AddressLine1,co.city,co.state,co.zip,
 		ROW_NUMBER() OVER (PARTITION BY co.personID ORDER BY co.seq) AS rowNumber
     FROM contactsGrouped co WITH (NOLOCK)
-    WHERE co.relationship <> 'Self' AND co.seq IS NOT NULL and co.relationship = 'Mother' AND co.guardian = 1
+    WHERE co.relationship <> 'Self' AND co.seq IS NOT NULL AND co.guardian = 1
 
 ),
 
