@@ -8,6 +8,7 @@
 	
 	Revision History:
 	03/30/2026		Initial creation of this template
+					Changed firstname/lastname to student table
 
 
 */
@@ -31,8 +32,8 @@ SELECT DISTINCT
 	stu.stateID AS [Unique ID],
 	stu.stateid AS [Student ID],
 	'Students' AS [Role],
-	cc.firstname AS [First Name],
-	cc.lastname AS [Last Name],
+	stu.firstname AS [First Name],
+	stu.lastname AS [Last Name],
 	cc.email AS [Email 1],
 	TransBusAM.number AS [Bus Route AM],
 	TransBusPM.number AS [Bus Route PM],
